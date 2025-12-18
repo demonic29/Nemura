@@ -84,8 +84,19 @@ export default function LatestNews() {
     }
   };
 
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+
+  const filteredNews = selectedTopic
+  ? popularNews.filter((item) => {
+      const subject = Array.isArray(item["dc:subject"])
+        ? item["dc:subject"][1]
+        : item["dc:subject"];
+      return subject === selectedTopic;
+    })
+  : popularNews;
+
   return (
-    <div className="bg-background-light text-white px-2 py-6">
+    <div className="bg-background-light min-h-screen text-white px-2 py-6">
       {/* <ArrowLeftIcon className="w-4 h-4 text-[#3A86FF] cursor-pointer" /> */}
 
       <HeaderNav title="最新ニュース" />
@@ -104,7 +115,14 @@ export default function LatestNews() {
               return (
                 <button
                   key={index}
-                  className="flex-shrink-0 bg-gradient-to-r from-[#1D57A6] to-[#2868B8] text-white text-sm font-medium rounded-lg px-5 py-2.5 hover:shadow-lg hover:scale-105 transition-all duration-200 whitespace-nowrap"
+                  onClick={() => {
+                    if( selectedTopic === subject ){
+                      setSelectedTopic(null);
+                    }else{
+                      setSelectedTopic(subject);
+                    }
+                  }}
+                  className={`flex-shrink-0 bg-gradient-to-r from-[#1D57A6] to-[#2868B8] text-white text-sm font-medium rounded-lg px-5 py-2.5 hover:shadow-lg hover:scale-105 transition-all duration-200 whitespace-nowrap ${selectedTopic === subject ? 'ring-2 ring-blue-200': ''}`}
                 >
                   {subject}
                 </button>
@@ -115,7 +133,7 @@ export default function LatestNews() {
 
         {/* news */}
         <div className="space-y-4">
-          {popularNews.slice(0, 10).map((i,index) => (
+          {filteredNews.slice(0, 10).map((i,index) => (
             <LatestNewsCard key={index} i={i} playAudio={playAudio}/>
           ))}
         </div>

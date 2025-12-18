@@ -1,6 +1,9 @@
+
 import '../app/globals.css';
 import type { Metadata } from 'next'
 import { Zen_Maru_Gothic } from 'next/font/google'
+
+import { HeroUIProvider } from '@heroui/react';
 
 const zenMaru = Zen_Maru_Gothic({
   subsets: ['latin'],
@@ -20,7 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
       </head>
       <body className={zenMaru.className}>
-        {children}
+           {children}
+        {/* <HeroUIProvider>
+        </HeroUIProvider> */}
       </body>
     </html>
   )
