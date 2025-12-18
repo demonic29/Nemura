@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroui/react": "^2.8.6",
     "@lottiefiles/react-lottie-player": "^3.6.0",
+    "@nextui-org/react": "^2.6.11",
     "@tailwindcss/line-clamp": "^0.4.4",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/vite": "^4.1.18",
     "axios": "^1.13.2",
-    "framer-motion": "^12.23.26",
+    "framer-motion": "^10.18.0",
     "lottie-react": "^2.4.1",
     "next": "13.5.4",
     "react": "^18",
@@ -28,11 +30,11 @@
     "@types/react-dom": "^18",
     "@types/webpack": "^5.28.5",
     "@types/xml2js": "^0.4.14",
-    "autoprefixer": "^10.4.22",
+    "autoprefixer": "^10.4.23",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.3.3",
+    "tailwindcss": "^3.4.19",
     "typescript": "^5"
   }
 }
