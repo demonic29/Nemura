@@ -9,13 +9,13 @@ const DialogueBox: React.FC<DialogueBoxProps> = ({ children }: { children: React
     <div className="w-full max-w-2xl p-6 mb-16 flex justify-center">
       <p
         className="
-          text-white
+          text-white-soft
           text-center
           text-2xl
           leading-relaxed
           break-words
           line-clamp-3
-          text-shadow-white
+          drop-shadow-white-glow-str
         "
       >
         {children}

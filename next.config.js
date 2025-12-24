@@ -1,6 +1,14 @@
 // @ts-check
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**'
+      }
+    ]
+  },
   /**
    * @param {any} config - webpack の設定オブジェクト
    */

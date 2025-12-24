@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .fade-enter {
   @apply opacity-0;
 }
@@ -21,5 +22,20 @@
 .text-shadow-white {
   text-shadow:
     0 0 6px rgba(255, 255, 255, 0.9),
-    0 0 16px rgba(255, 255, 255, 0.6);
+    0 0 16px 
+}
+.title{
+  @apply text-[24px] font-bold;
+}
+
+.normal{
+  @apply text-[16px] font-semibold;
+}
+
+.desc{
+  @apply text-[12px] text-[#d6d6d6];
+}
+
+.caption{
+  @apply text-[10px];
 }

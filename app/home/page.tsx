@@ -7,6 +7,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import sleepData from "@/assets/animations/sleep-nemura.json";
 import sleepImage from "@/assets/animations/sleep-click-nemura.png";
 import Background from "@/components/Background";
+import SafeImage from "@/components/SafeImage";
 
 export default function Home() {
   const [showPng, setShowPng] = useState(false);
@@ -22,7 +23,7 @@ export default function Home() {
 
     // 10秒後にリダイレクト
     const t2 = setTimeout(() => {
-      router.push("/ai-summary");
+      router.push("/today-news");
     }, 13000);
 
     return () => {
@@ -45,9 +46,10 @@ export default function Home() {
         {/* 共通のコンテナでサイズを統一 */}
         <div style={{ width: 300, height: 300, position: "relative" }}>
           {showPng ? (
-            <Image
+            <SafeImage
               src={sleepImage}
               alt="sleep"
+              sizes="100vw"
               fill
               style={{ objectFit: "contain", pointerEvents: "none" }}
             />
