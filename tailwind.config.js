@@ -13,11 +13,11 @@ module.exports = {
       colors: {
         'white-soft': '#FEFEFE',
         'black-soft': '#222222', 
-        'gray-soft': '#4B5563', 
+        'gray-soft': '#4B5563',
         'button': '#1D57A6',
       },
       backgroundImage: {
-        'background-light': 'linear-gradient(to bottom, #00050c, #02172c, #04234a)',
+        'background-light': 'linear-gradient(to bottom, #00040a, #003569, #004E9A)',
         'voice-button': 'linear-gradient(to bottom, #0D1B2A, #3A86FF)',
       },
       spacing: {
@@ -32,6 +32,17 @@ module.exports = {
       },
       fontFamily: {
         sans: ['"Zen Maru Gothic"', 'sans-serif'], 
+      },
+
+      // アニメーション
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(200%)' },  // 親の右外から開始
+          '100%': { transform: 'translateX(-150%)' }, // 親の左外まで移動
+        },
+      },
+      animation: {
+        marquee: 'marquee 12s linear infinite',
       },
     },
   },
