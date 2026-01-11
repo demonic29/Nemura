@@ -31,7 +31,7 @@ export default function PlaybackControls({
         {/* 10秒戻る */}
         <button 
           onClick={onRewind}
-          className="text-white opacity-80 hover:opacity-100 transition-all active:scale-90"
+          className="text-white-soft opacity-80 hover:opacity-100 transition-all active:scale-90"
         >
           <Replay10Icon className="w-8 h-8" />
         </button>

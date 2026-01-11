@@ -1,14 +1,13 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { ArrowRightIcon,SettingIcon } from "@icons/index"
+import { ArrowRightIcon, SettingIcon } from "@icons/index"
 
 export default function Header() {
   const router = useRouter()
 
   return (
     <header className="flex items-center justify-between px-6 h-[54px] w-full bg-transparent">
-
 
       {/* 戻るボタン */}
       <button 
@@ -23,6 +22,7 @@ export default function Header() {
 
       {/* 設定ボタン */}
       <button 
+        onClick={() => router.push('/settings')}
         className="p-2 text-white-soft/70 transition-opacity hover:opacity-70"
         aria-label="設定"
       >
