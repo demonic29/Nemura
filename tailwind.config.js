@@ -34,15 +34,46 @@ module.exports = {
         sans: ['"Zen Maru Gothic"', 'sans-serif'], 
       },
 
-      // アニメーション
+      // アニメーション関連
       keyframes: {
         marquee: {
-          '0%': { transform: 'translateX(200%)' },  // 親の右外から開始
-          '100%': { transform: 'translateX(-150%)' }, // 親の左外まで移動
+          '0%': { transform: 'translateX(200%)' },
+          '100%': { transform: 'translateX(-150%)' },
+        },
+        bounceRight: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        bounceSlow: {  // ヘッドフォン用
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5%)' },
+        },
+        dot1: {  // ドットアニメーション
+          '0%, 80%, 100%': { transform: 'scale(0)' },
+          '40%': { transform: 'scale(1)' },
+        },
+        dot2: {
+          '0%, 80%, 100%': { transform: 'scale(0)' },
+          '40%': { transform: 'scale(1)' },
+        },
+        dot3: {
+          '0%, 80%, 100%': { transform: 'scale(0)' },
+          '40%': { transform: 'scale(1)' },
         },
       },
       animation: {
         marquee: 'marquee 12s linear infinite',
+        bounceRight: 'bounceRight 0.6s ease-in-out infinite',
+        bounceSlow: 'bounceSlow 5.0s ease-in-out infinite', // ヘッドフォン
+        dot1: 'dot1 2.5s infinite ease-in-out 0s',
+        dot2: 'dot2 2.5s infinite ease-in-out 0.2s',
+        dot3: 'dot3 2.5s infinite ease-in-out 0.4s',
+      },
+
+      transitionDelay: {
+        0: '0s',
+        150: '0.15s',
+        300: '0.3s',
       },
     },
   },
