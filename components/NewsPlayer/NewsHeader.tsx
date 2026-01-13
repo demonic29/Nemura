@@ -13,6 +13,7 @@ export default function NewsHeader({ title, estimatedDuration }: Props) {
       <div className="inline-block whitespace-nowrap animate-marquee">
         <h1 className="text-lg font-semibold text-white-soft">
           {title}
+          <span className="mx-12">{title}</span>  {/* ここで間隔を広げる */}
         </h1>
       </div>
     </div>

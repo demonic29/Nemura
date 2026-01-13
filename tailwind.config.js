@@ -37,12 +37,12 @@ module.exports = {
       // アニメーション
       keyframes: {
         marquee: {
-          '0%': { transform: 'translateX(200%)' },  // 親の右外から開始
-          '100%': { transform: 'translateX(-150%)' }, // 親の左外まで移動
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
       },
       animation: {
-        marquee: 'marquee 30s linear infinite',
+        marquee: 'marquee 10s linear infinite',
       },
     },
   },

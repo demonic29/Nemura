@@ -3,7 +3,7 @@
 'use client'
 
 import NavigationHeader from "@/components/NavigationHeader"
-import NewsListItem from "@/components/NewsListItem"
+import NewsCard from "@/components/NewsCard"
 import NewsPlayerMini from "@/components/NewsPlayer/NewsPlayerMini"
 import { useVoicePlayer, VoiceItem } from '@/context/VoicePlayerContext'
 
@@ -49,17 +49,16 @@ export default function PlaylistPage() {
 
         <div className="flex-1 flex flex-col px-6 mt-6 z-20 overflow-y-auto pb-32">
           <div className="space-y-4">
-            {items.map((item, idx) => (
-              <NewsListItem
-                key={idx}
-                title={item.title}
-                imageUrl={(item as any).imageUrl}
-                subject={(item as any).subject}
-                onClick={() => handlePlay(item)}
-                onAddClick={() => handleRemove(item.title)}
-                onPlayClick={() => handlePlay(item)}
-              />
-            ))}
+          {items.map((item, idx) => (
+            <NewsCard
+              key={idx}
+              item={item}  // ←ここで丸ごと渡す
+              onPlayClick={() => handlePlay(item)}
+              onToggleAdd={(added) => {
+                if (!added) handleRemove(item.title)
+              }}
+            />
+          ))}
           </div>
 
           {items.length === 0 && (

@@ -3,20 +3,22 @@
 'use client'
 
 import { createContext, useContext, useState, ReactNode } from "react"
+import { Characters } from "@/app/ai-character/config"
 
 export type VoiceItem = {
   title: string
   body?: string
-  // 他に必要な情報があればここに追加
+  imageUrl?: string
+  estimatedDuration?: number
 }
 
 type VoicePlayerContextType = {
   currentItem: VoiceItem | null
   playing: boolean
-  character: Character | null  // ←追加
+  character: any | null
   setCurrentItem: (item: VoiceItem | null) => void
   setPlaying: (playing: boolean) => void
-  setCharacter: (character: Character | null) => void  // ←追加
+  setCharacter: (character: typeof Characters | null) => void
 }
 
 const VoicePlayerContext = createContext<VoicePlayerContextType | undefined>(undefined)
@@ -24,9 +26,17 @@ const VoicePlayerContext = createContext<VoicePlayerContextType | undefined>(und
 export function VoicePlayerProvider({ children }: { children: ReactNode }) {
   const [playing, setPlaying] = useState(false)
   const [currentItem, setCurrentItem] = useState<VoiceItem | null>(null)
+  const [character, setCharacter] = useState<typeof Characters | null>(null)
 
   return (
-    <VoicePlayerContext.Provider value={{ playing, setPlaying, currentItem, setCurrentItem }}>
+    <VoicePlayerContext.Provider value={{
+      currentItem,
+      setCurrentItem,
+      playing,
+      setPlaying,
+      character,
+      setCharacter,
+    }}>
       {children}
     </VoicePlayerContext.Provider>
   )

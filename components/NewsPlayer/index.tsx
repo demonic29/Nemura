@@ -3,7 +3,6 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import CharacterSelect from "@/app/ai-character/CharacterSelect"
 import { Characters } from "@/app/ai-character/config"
 import SpeechNemura from "./SpeechNemura"
 import NewsHeader from "./NewsHeader"
@@ -94,10 +93,7 @@ export default function NewsPlayer({ item, showNemura = false }: NewsPlayerProps
 
   return (
     <div className="w-full max-w-xl h-[100svh] flex flex-col">
-
-      {/* キャラクター選択 */}
-      <CharacterSelect setCharacter={setCharacter} playAudio={playAudio} />
-
+      
       {/* 上：固定 */}
       <div className="shrink-0 space-y-4 pb-[36px]">
         {showNemura && <SpeechNemura isPlaying={isPlaying} />}
