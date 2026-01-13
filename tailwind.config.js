@@ -1,37 +1,52 @@
-const { nextui } = require("@nextui-org/react");
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+    './app/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
+      dropShadow: {
+        'white-glow': '0 0 15px rgba(255, 255, 255, 0.3)',
+        'white-glow-str': '0 0 15px rgba(255, 255, 255, 1)',
+      },
       colors: {
-        "white-soft": "#FEFEFE",
-        "black-soft": "#222222",
+        'white-soft': '#FEFEFE',
+        'black-soft': '#222222', 
+        'gray-soft': '#4B5563',
+        'button': '#1D57A6',
       },
       backgroundImage: {
-        "background-light":
-          "linear-gradient(to bottom, #00050c, #02172c, #04234a)",
-        "voice-button": "linear-gradient(to bottom, #0D1B2A, #3A86FF)",
+        'background-light': 'linear-gradient(to bottom, #00040a, #003569, #004E9A)',
+        'voice-button': 'linear-gradient(to bottom, #0D1B2A, #3A86FF)',
       },
       spacing: {
-        "space-2x": "16px",
-        "header-h": "54px",
-        "footer-h": "24px",
+        'space-2x': '16px',
+        'header-h': '54px',
+        'footer-h': '24px',
       },
       fontSize: {
-        base: "16px",
-        strong: "24px",
-        max: "32px",
+        base: '16px',
+        strong: '24px',
+        max: '32px',
       },
       fontFamily: {
-        sans: ['"Zen Maru Gothic"', "sans-serif"],
+        sans: ['"Zen Maru Gothic"', 'sans-serif'], 
+      },
+
+      // アニメーション
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(200%)' },  // 親の右外から開始
+          '100%': { transform: 'translateX(-150%)' }, // 親の左外まで移動
+        },
+      },
+      animation: {
+        marquee: 'marquee 30s linear infinite',
       },
     },
   },
-  plugins: [require("@tailwindcss/line-clamp"), nextui()],
+  plugins: [
+    require('@tailwindcss/line-clamp'),
+  ],
 };

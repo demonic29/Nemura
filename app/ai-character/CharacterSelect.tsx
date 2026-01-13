@@ -1,3 +1,5 @@
+// CharacterSelect.tsx
+
 'use client'
 
 import { Characters } from './config'

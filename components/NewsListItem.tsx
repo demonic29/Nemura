@@ -1,53 +1,49 @@
-// LatestNewsCard.tsx
+// NewsListItem.tsx
 
-'use client'
+"use client";
 
-import { AddCircleIcon, RemoveCircleIcon, PlayCircleIcon } from "@/assets/icons"
-import SafeImage from "@/components/SafeImage"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { useVoicePlayer, VoiceItem } from '@/context/VoicePlayerContext'
+import SafeImage from "@/components/SafeImage";
+import { AddCircleIcon, RemoveCircleIcon, PlayCircleIcon } from "@icons/index";
+import { useState } from "react";
 
-export type LatestNewsCardProps = {
-  item: VoiceItem
-    isAdded?: boolean
-    selectedCharacter: string
-  onToggleAddAction?: (added: boolean) => void
-}
+type NewsListItemProps = {
+  title: string;
+  imageUrl: string;
+  subject: string | string[];
+  isAdded?: boolean; // 追加済みかどうか
+  onClick?: () => void;
+  onToggleAdd?: (added: boolean) => void; // 追加・削除切り替え用
+  onPlayClick?: (e: React.MouseEvent) => void;
+};
 
-export default function LatestNewsCard({
-  item,
+const NewsListItem = ({
+  title,
+  imageUrl,
+  subject,
   isAdded = false,
-  onToggleAddAction,
-}: LatestNewsCardProps) {
-  const [added, setAdded] = useState(isAdded)
-  const router = useRouter()
-  const { setCurrentItem, setPlaying } = useVoicePlayer()
+  onClick,
+  onToggleAdd,
+  onPlayClick,
+}: NewsListItemProps) => {
+  const displaySubject = Array.isArray(subject) ? subject[0] : subject || "未分類";
+  const [added, setAdded] = useState(isAdded);
 
-  // 追加／削除切り替え
   const handleToggleAdd = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setAdded(!added)
-    onToggleAddAction?.(!added)
-  }
-
-  // 再生ボタン押下
-  const handlePlay = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setCurrentItem(item)  // タイトル・本文・画像など丸ごと
-    setPlaying(true)
-    router.push('/voice-player')  // ページ遷移
-  }
+    e.stopPropagation();
+    setAdded(!added);
+    onToggleAdd?.(!added);
+  };
 
   return (
     <div
+      onClick={onClick}
       className="flex space-x-3 bg-[#3A86FF]/10 rounded-xl p-2 relative cursor-pointer hover:bg-[#3A86FF]/20 transition-colors"
     >
       {/* サムネイル */}
       <div className="w-20 h-20 relative flex-shrink-0">
         <SafeImage
-          src={item.imageUrl || item["hatena:imageurl"]}
-          alt={item.title}
+          src={imageUrl}
+          alt={title}
           fill
           sizes="80px"
           className="object-cover rounded-lg"
@@ -57,15 +53,16 @@ export default function LatestNewsCard({
       {/* テキスト */}
       <div className="flex-grow flex flex-col relative">
         <h3 className="text-base font-semibold line-clamp-2 pr-14 text-white">
-          {item.title}
+          {title}
         </h3>
         <div className="absolute bottom-2 left-0 text-xs text-gray-400">
-          {Array.isArray(item["dc:subject"]) ? item["dc:subject"][1] : item["dc:subject"] || "未分類"}
+          {displaySubject}
         </div>
       </div>
 
       {/* アクションボタン */}
       <div className="absolute bottom-2 right-2 flex items-center space-x-2">
+        {/* 追加／削除ボタン */}
         <button
           onClick={handleToggleAdd}
           className="p-1 hover:opacity-70 transition-opacity"
@@ -77,13 +74,19 @@ export default function LatestNewsCard({
           )}
         </button>
 
+        {/* 再生ボタン */}
         <button
-          onClick={handlePlay}
+          onClick={(e) => {
+            e.stopPropagation();
+            onPlayClick?.(e);
+          }}
           className="p-1 hover:opacity-70 transition-opacity"
         >
           <PlayCircleIcon className="w-7 h-7 text-gray-400" />
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default NewsListItem;
