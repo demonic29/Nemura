@@ -3,8 +3,8 @@
 import { AddCircleIcon, PlayCircleIcon } from '@/app/assets/icons'
 import React, { useState, useEffect } from 'react'
 import SafeImage from './SafeImage'
-import { db } from '@/app/lib/firebase/firebase'
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore'
+import { auth, db } from '@/app/lib/firebase/firebase'
+import { doc, onSnapshot, updateDoc, arrayRemove } from 'firebase/firestore'
 
 import {
     Modal,
@@ -31,36 +31,56 @@ export default function LatestNewsCard({i, playAudio, index, id}: any) {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [isAdding, setIsAdding] = useState(false);
     const [playlist, setPlaylist] = useState<PlaylistItem[]>([]);
+    const [user, setUser] = useState<any>(null);
 
-    // Real-time listener for all saved posts
+    // Get current user
     useEffect(() => {
-        const q = query(collection(db, 'playlist'), orderBy('addedAt', 'desc'));
+        const unsubscribeAuth = auth.onAuthStateChanged((currentUser) => {
+            setUser(currentUser);
+        });
+
+        return () => unsubscribeAuth();
+    }, []);
+
+    // Real-time listener for user's playlist
+    useEffect(() => {
+        if (!user) return;
+
+        const userDocRef = doc(db, "users", user.uid);
         
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const items: PlaylistItem[] = [];
-            querySnapshot.forEach((doc) => {
-                items.push({ id: doc.id, ...doc.data() } as PlaylistItem);
-            });
+        const unsubscribe = onSnapshot(userDocRef, (snapshot) => {
+            const data = snapshot.data();
+            const items = (data?.playlist || []) as PlaylistItem[];
             setPlaylist(items);
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [user]);
 
-    // Function to add news to Firebase and then show modal
+    // Function to add news to user's playlist
     const handleAddClick = async () => {
+        if (!user) {
+            alert('ログインしてください');
+            return;
+        }
+
         setIsAdding(true);
         try {
             const newsItem = {
+                id: Date.now().toString(),
                 title: i.title,
                 imageUrl: i["hatena:imageurl"],
                 category: Array.isArray(i["dc:subject"]) ? i["dc:subject"][1] : i["dc:subject"],
                 link: i.link,
-                addedAt: serverTimestamp(),
+                addedAt: new Date().toISOString(),
             };
 
-            const docRef = await addDoc(collection(db, 'playlist'), newsItem);
-            console.log('Document written with ID: ', docRef.id);
+            const userDocRef = doc(db, "users", user.uid);
+            await updateDoc(userDocRef, {
+                playlist: [...playlist, newsItem],
+            });
+
+            console.log('Document added to user playlist');
             
             // Open modal after successful save
             onOpen();
@@ -72,11 +92,19 @@ export default function LatestNewsCard({i, playAudio, index, id}: any) {
         }
     };
 
-    // Function to remove item from playlist
-    const removeFromPlaylist = async (id: string) => {
+    // Function to remove item from user's playlist
+    const removeFromPlaylist = async (itemId: string) => {
+        if (!user) return;
+
         try {
-            await deleteDoc(doc(db, 'playlist', id));
-            console.log('Item removed from playlist');
+            const itemToRemove = playlist.find((item) => item.id === itemId);
+            if (itemToRemove) {
+                const userDocRef = doc(db, "users", user.uid);
+                await updateDoc(userDocRef, {
+                    playlist: playlist.filter((item) => item.id !== itemId),
+                });
+                console.log('Item removed from user playlist');
+            }
         } catch (error) {
             console.error('Error removing item:', error);
             alert('削除に失敗しました');

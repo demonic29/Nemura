@@ -1,59 +1,187 @@
+'use client';
+
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams, useRouter } from 'next/navigation';
 
 import sample from '@/public/sample.jpg';
-import { Post } from '@/app/lib/post';
+import SafeImage from '@/components/SafeImage';
+import { playAudio } from '@/app/lib/audio';
+import { auth, db } from '@/app/lib/firebase/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
-export default async function NewsDetailsPage({
-    params
-}: {
-    params: Promise<{ id: string, post: Post}>
-}) {
+export default function NewsDetailsPage() {
+    const params = useParams();
+    const router = useRouter();
+    const id = params.id as string;
 
-    const { id } = await params;
+    const [newsItem, setNewsItem] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [userVoice, setUserVoice] = useState<string>("20");
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    useEffect(() => {
+        // Fetch user's voice preference
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userSnapshot = await getDoc(userDocRef);
+                    const userData = userSnapshot.data();
+
+                    if (userData && userData.voice) {
+                        const voiceMap: { [key: string]: string } = {
+                            "electronic": "20",
+                            "cool": "21",
+                            "child": "22",
+                            "low": "23",
+                            "warm": "24"
+                        };
+                        setUserVoice(voiceMap[userData.voice] || "20");
+                    }
+                } catch (err) {
+                    console.error("Error fetching user voice:", err);
+                }
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        // Fetch news data
+        const fetchNews = async () => {
+            try {
+                const response = await fetch("/api/hatena?type=new");
+                const data = await response.json();
+
+                if (Array.isArray(data)) {
+                    const foundNews = data.find((news: any) => news.title === decodeURIComponent(id));
+                    setNewsItem(foundNews);
+                }
+            } catch (err) {
+                console.error("Error fetching news:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchNews();
+    }, [id]);
+
+    const handlePlayAudio = async () => {
+        if (!newsItem) return;
+
+        setIsPlaying(true);
+        try {
+            await playAudio(newsItem.description, userVoice);
+        } catch (err) {
+            console.error("Error playing audio:", err);
+        } finally {
+            setIsPlaying(false);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div className="bg-background-light min-h-screen flex items-center justify-center">
+                <p className="text-white">読み込み中...</p>
+            </div>
+        );
+    }
+
+    if (!newsItem) {
+        return (
+            <div className="bg-background-light min-h-screen flex items-center justify-center">
+                <p className="text-white">ニュースが見つかりません</p>
+            </div>
+        );
+    }
+
+    const imageUrl = newsItem["hatena:imageurl"] || sample;
+    const category = Array.isArray(newsItem["dc:subject"])
+        ? newsItem["dc:subject"][1]
+        : newsItem["dc:subject"] || "未分類";
 
     return (
-        <div>
-            <div className={`bg-[url('/playlist-bg.png')] min-h-screen`}>
-                <div className='w-full h-[300px] relative overflow-hidden'>
-                    <Image
-                        alt=''
-                        fill
-                        src={sample}
-                        objectFit='cover'
-                    />
-                    
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="bg-background-light min-h-screen text-white pb-8">
 
-                    <p className='absolute normal text-white bottom-4 ms-4'>{  }</p>
-                </div>
+            {/* Hero image */}
+            <div className="w-full h-[250px] relative overflow-hidden">
 
-                <div className='flex items-center justify-between mt-4 px-3'>
-                    <div className='flex items-center gap-4'>
-                        <div className='relative w-10 h-10'>
-                            <Image
-                                src={sample}
-                                fill
-                                alt='logo'
-                                className='rounded-full object-cover'
-                            />
-                        </div>
-                        <span className='normal text-white'>経済ニュース</span>
-                    </div>
+                <SafeImage
+                    alt={newsItem.title}
+                    fill
+                    src={imageUrl}
+                    className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
-                    <button className='text-white normal bg-[#1D57A6] px-3 py-1 rounded-lg'>
-                        再生
-                        <i className="ms-2 fa-regular fa-circle-play"></i>
-                    </button>
-                </div>
+                {/* Back button */}
+                <button
+                    onClick={() => router.back()}
+                    className="text-blue-400 left-2 absolute top-2 text-sm font-semibold"
+                >
+                    ← 戻る
+                </button>
 
-                <div className='px-3 mt-4'>
-                    <p className='normal text-white font-normal leading-6'>
-                        兵庫県の内部告発問題を巡り、竹内英明前県議（当時５０歳）の名誉を傷つけたとして、政治団体「ＮＨＫから国民を守る党」党首の立花孝志容疑者（５８）が逮捕された事件で、接見した弁護士が１１日、立花容疑者が自身の発言や投稿について、「真実相当性はあった」と主張していることを明らかにした。
-                    </p>
+                {/* Title */}
+                <div>
+                    <h1 className="text-3xl font-bold leading-snug absolute normal text-white bottom-4 ms-4">
+                        {newsItem.title}
+                    </h1>
                 </div>
             </div>
 
+            {/* Content */}
+            <div className="px-4 mt-6 space-y-4">
+                {/* Category and Play Button */}
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 relative flex-shrink-0">
+                            <SafeImage
+                                src={imageUrl}
+                                fill
+                                alt={category}
+                                className="rounded-full object-cover"
+                            />
+                        </div>
+                        <span className="text-sm font-semibold text-blue-400">{category}</span>
+                    </div>
+
+                    <button
+                        onClick={handlePlayAudio}
+                        disabled={isPlaying}
+                        className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 px-4 py-2 rounded-lg font-semibold text-sm transition-all active:scale-95 flex items-center gap-2"
+                    >
+                        <span>{isPlaying ? "再生中..." : "再生"}</span>
+                        <i className={`fa-regular fa-circle-play ${isPlaying ? 'animate-spin' : ''}`}></i>
+                    </button>
+                </div>
+
+
+
+                {/* Description/Summary */}
+                <div className="pt-4">
+                    <p className="text-base leading-relaxed text-gray-300">
+                        {newsItem.description || newsItem.summary || "ニュース詳細"}
+                    </p>
+                </div>
+
+                {/* Source link */}
+                {newsItem.link && (
+                    <div className="pt-4">
+                        <a
+                            href={newsItem.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 underline text-sm"
+                        >
+                            ソースを見る →
+                        </a>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
