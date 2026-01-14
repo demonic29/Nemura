@@ -122,7 +122,7 @@ export default function HomePage() {
 
 
         {/* Topic News */}
-        <div>
+        <div className="flex flex-col" style={{ height: 'calc(100vh - 54px - 16px - 550px)' }}>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-white-soft">最新ニュース</h2>
             <Link href="/today-news/latest-news" className="flex items-center pt-2">
@@ -131,7 +131,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="h-[400px] overflow-y-auto space-y-4">
+          <div className="flex-1 overflow-y-auto space-y-4 pb-[80px]">
             {popularNews.slice(0, 10).map((news) => (
               <VoiceNewsCard
                 key={news.title}

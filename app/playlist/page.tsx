@@ -75,6 +75,7 @@ export default function PlaylistPage() {
                 onToggleAdd={(added) => {
                   if (!added) handleRemove(item.title)
                 }}
+                isPlaylistMode={true}
               />
             ))}
           </div>
@@ -87,7 +88,7 @@ export default function PlaylistPage() {
         </div>
       </div>
 
-      {/* ミニプレーヤー */}
+      {/* ミニプレイヤー */}
       {playing && currentItem && (
         <div ref={miniPlayerRef} className="absolute bottom-0 left-0 right-0 z-[200]">
           <NewsPlayerMini isOpen={true} />

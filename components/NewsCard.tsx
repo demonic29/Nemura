@@ -19,6 +19,7 @@ export type NewsCardProps = {
   isAdded?: boolean
   onPlayClick?: () => void
   onToggleAdd?: (added: boolean) => void
+  isPlaylistMode?: boolean
 }
 
 export default function NewsCard({
@@ -26,6 +27,7 @@ export default function NewsCard({
   isAdded = false,
   onPlayClick,
   onToggleAdd,
+  isPlaylistMode = false,
 }: NewsCardProps) {
   const [added, setAdded] = useState(isAdded)
 
@@ -77,7 +79,9 @@ export default function NewsCard({
           onClick={handleToggleAdd}
           className="p-1 hover:opacity-70 transition-opacity"
         >
-          {added ? (
+          {isPlaylistMode ? (
+            <RemoveCircleIcon className="w-7 h-7 text-gray-400" />
+          ) : added ? (
             <RemoveCircleIcon className="w-7 h-7 text-gray-400" />
           ) : (
             <AddCircleIcon className="w-7 h-7 text-gray-400" />
