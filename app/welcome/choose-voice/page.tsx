@@ -21,10 +21,10 @@ import { auth, db } from "@/app/lib/firebase/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const VOICES = [
-  { id: "electronic", label: "電子的な声", speaker: "20" },
-  { id: "cool", label: "冷静な声", speaker: "21" },
-  { id: "child", label: "子どもの声", speaker: "22" },
-  { id: "low", label: "低音な声", speaker: "23" },
+  { id: "electronic", label: "電子的な声", speaker: "47" },
+  { id: "cool", label: "冷静な声", speaker: "3" },
+  { id: "child", label: "子どもの声", speaker: "42" },
+  { id: "low", label: "低音な声", speaker: "13" },
   { id: "warm", label: "あたたかい声", speaker: "24" },
 ];
 

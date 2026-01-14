@@ -26,7 +26,7 @@ export default function PlaybackControls({
 }: PlaybackControlsProps) {
   return (
     <div className="w-full flex flex-col items-center px-8">
-      <div className="flex items-center justify-between w-full max-w-[350px]">
+      <div className="flex items-center justify-between w-full">
         
         {/* 10秒戻る */}
         <button 
@@ -43,14 +43,14 @@ export default function PlaybackControls({
 
         {/* 再生・一時停止 */}
         <button 
-          className="relative flex items-center justify-center w-20 h-20 transition-all active:scale-95"
+          className="relative flex items-center justify-center w-24 h-24 transition-all active:scale-95"
           onClick={onToggle}
         >
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             {isPlaying ? (
-              <PauseVoiceRing className="w-full h-full scale-[1.2]" />
+              <PauseVoiceRing className="w-full h-full" />
             ) : (
-              <PlayVoiceRing className="w-full h-full scale-[1.2]" />
+              <PlayVoiceRing className="w-full h-full" />
             )}
           </div>
         </button>
