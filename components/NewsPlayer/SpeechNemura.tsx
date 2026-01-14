@@ -5,8 +5,8 @@
 import { useState, useEffect } from "react"
 import LottiePlayer from "@/components/LottiePlayer"
 import SpeechVoiceRing from '@/assets/graphics/speech-ring.svg'
-import sleepJson from "@/app/assets/animations/sleep-nemura.json"
-import smileJson from "@/app/assets/animations/smile-nemura.json"
+import sleepJson from "@/assets/animations/sleep-nemura.json"
+import smileJson from "@/assets/animations/smile-nemura.json"
 
 type Props = { isPlaying: boolean }
 

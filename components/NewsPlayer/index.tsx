@@ -1,7 +1,9 @@
+// NewsPlayer/index.tsx
 'use client'
 
-import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { Characters } from "@/app/ai-character/config"
 import SpeechNemura from "./SpeechNemura"
 import NewsHeader from "./NewsHeader"
 import AudioSeekBar from "./AudioSeekBar"
@@ -9,36 +11,57 @@ import NewsBody from "./NewsBody"
 import ControlBar from "./ControlBar"
 import PlaybackControls from "./PlaybackControls"
 
-export default function NewsPlayer() {
+export type VoiceItem = {
+  title: string
+  body?: string
+  imageUrl?: string
+  estimatedDuration?: number
+}
+
+export type NewsPlayerProps = {
+  item: VoiceItem
+  showNemura?: boolean
+}
+
+export default function NewsPlayer({ item, showNemura = false }: NewsPlayerProps) {
+  const router = useRouter()
   const news = {
-    title: "AIが読む今日のニュース",
-    body: "ここにニュース本文が入る",
-    estimatedDuration: 180
+    title: item.title,
+    body: item.body || '',
+    imageUrl: item.imageUrl,
+    estimatedDuration: item.estimatedDuration || 180
   }
 
   const [currentTime, setCurrentTime] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackSpeed, setPlaybackSpeed] = useState('1X')
   const [sleepMinutes, setSleepMinutes] = useState<number | 'track-end'>('track-end')
+  const [character, setCharacter] = useState(Characters[0]) // 初期キャラクター
 
-  const router = useRouter()
-
-  const handleSeek = (amount: number) => {
-    setCurrentTime((prev) => {
-      const nextTime = prev + amount
-      return Math.min(Math.max(nextTime, 0), news.estimatedDuration)
-    })
+  const playAudio = (text: string, speaker: string) => {
+    if (typeof window === "undefined") return
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(text)
+    const voice = window.speechSynthesis.getVoices().find(v => v.name === speaker)
+    if (voice) utterance.voice = voice
+    utterance.lang = "ja-JP"
+    utterance.rate = 1
+    utterance.pitch = 1
+    window.speechSynthesis.speak(utterance)
   }
 
-  // 再生タイマー
+  // 再生タイマーはそのまま
+  const handleSeek = (amount: number) => {
+    setCurrentTime(prev => Math.min(Math.max(prev + amount, 0), news.estimatedDuration))
+  }
+
   useEffect(() => {
     let timer: NodeJS.Timeout
     let sleepTimer: NodeJS.Timeout
 
     if (isPlaying) {
-      // 通常再生
       timer = setInterval(() => {
-        setCurrentTime((prev) => {
+        setCurrentTime(prev => {
           if (prev >= news.estimatedDuration) {
             setIsPlaying(false)
             return prev
@@ -48,7 +71,6 @@ export default function NewsPlayer() {
         })
       }, 1000)
 
-      // スリープタイマー
       if (sleepMinutes !== 'track-end') {
         sleepTimer = setTimeout(() => {
           setIsPlaying(false)
@@ -71,10 +93,10 @@ export default function NewsPlayer() {
 
   return (
     <div className="w-full max-w-xl h-[100svh] flex flex-col">
-
+      
       {/* 上：固定 */}
       <div className="shrink-0 space-y-4 pb-[36px]">
-        <SpeechNemura isPlaying={isPlaying} />
+        {showNemura && <SpeechNemura isPlaying={isPlaying} />}
         <div className="px-8">
           <NewsHeader title={news.title} estimatedDuration={news.estimatedDuration} />
         </div>

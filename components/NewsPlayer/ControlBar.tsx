@@ -3,6 +3,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import SleepTimerModal from "./SleepTimerModal"
 import PlaybackSpeedModal from "./PlaybackSpeedModal"
 import { OnexMobiledataIcon, BedtimeIcon, PlayListAddCheckIcon } from "@icons/index"
@@ -17,6 +18,7 @@ type Props = {
 export default function ControlBar({ playbackSpeed, setPlaybackSpeed, sleepMinutes, setSleepMinutes }: Props) {
   const [sleepOpen, setSleepOpen] = useState(false)
   const [speedOpen, setSpeedOpen] = useState(false)
+  const router = useRouter()
 
   return (
     <div className="flex items-center justify-between px-10 h-[60px] w-full bg-transparent relative">
@@ -94,7 +96,10 @@ export default function ControlBar({ playbackSpeed, setPlaybackSpeed, sleepMinut
       </div>
 
       {/* プレイリスト・完了 */}
-      <button className="text-white-soft/80 hover:text-white transition-colors">
+      <button
+        onClick={() => router.push('/playlist')}
+        className="text-white-soft/80 hover:text-white transition-colors"
+      >
         <PlayListAddCheckIcon className="w-8 h-8" />
       </button>
 
