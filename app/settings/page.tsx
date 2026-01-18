@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation"
 import Background from "@/components/Background"
 import NavigationHeader from "@/components/NavigationHeader"
 import LottiePlayer from "@/components/LottiePlayer"
-import { AddCircleIcon, GraphicIcon } from "@icons/index"
-import smileJson from "@/app/assets/animations/smile-nemura.json"
+import { AddCircleIcon, GraphicIcon } from "@/assets/icons/index"
+import smileJson from "@/assets/animations/smile-nemura.json"
 
 export default function SettingsPage() {
   const router = useRouter()

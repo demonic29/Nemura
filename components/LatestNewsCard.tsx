@@ -1,6 +1,6 @@
 'use client'
 
-import { AddCircleIcon, PlayCircleIcon, RemoveCircleIcon } from '@/app/assets/icons'
+import { AddCircleIcon, PlayCircleIcon, RemoveCircleIcon } from '@/assets/icons'
 import React, { useState, useEffect } from 'react'
 import SafeImage from './SafeImage'
 import { auth, db } from '@/app/lib/firebase/firebase'

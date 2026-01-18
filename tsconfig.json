@@ -21,9 +21,9 @@
     "baseUrl": "",
     "paths": {
       "@/*": ["./*"], 
-      "@assets/*": ["app/assets/*"], 
-      "@icons": ["app/assets/icons/index"], 
-      "@icons/*": ["app/assets/icons/*"]
+      "@assets/*": ["assets/*"], 
+      "@icons": ["assets/icons/index"], 
+      "@icons/*": ["assets/icons/*"]
     },
     "types": ["node"]
   },

@@ -1,9 +1,7 @@
 // context/VoicePlayerContext.tsx
-
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from "react"
-import { Characters } from "@/app/ai-character/config"
+import React, { createContext, useContext, useState, ReactNode } from 'react'
 
 export type VoiceItem = {
   title: string
@@ -14,29 +12,42 @@ export type VoiceItem = {
 
 type VoicePlayerContextType = {
   currentItem: VoiceItem | null
-  playing: boolean
-  character: any | null
   setCurrentItem: (item: VoiceItem | null) => void
-  setPlaying: (playing: boolean) => void
-  setCharacter: (character: typeof Characters | null) => void
+  newsItems: VoiceItem[]
+  setNewsItems: (items: VoiceItem[]) => void
+  currentIndex: number
+  setCurrentIndex: (index: number) => void
 }
 
 const VoicePlayerContext = createContext<VoicePlayerContextType | undefined>(undefined)
 
 export function VoicePlayerProvider({ children }: { children: ReactNode }) {
-  const [playing, setPlaying] = useState(false)
-  const [currentItem, setCurrentItem] = useState<VoiceItem | null>(null)
-  const [character, setCharacter] = useState<typeof Characters | null>(null)
+  const [currentItem, setCurrentItemState] = useState<VoiceItem | null>(null)
+  const [newsItems, setNewsItems] = useState<VoiceItem[]>([])
+  const [currentIndex, setCurrentIndexState] = useState(0)
+
+  const setCurrentItem = (item: VoiceItem | null) => {
+    setCurrentItemState(item)
+  }
+
+  const setCurrentIndex = (index: number) => {
+    setCurrentIndexState(index)
+    if (newsItems[index]) {
+      setCurrentItemState(newsItems[index])
+    }
+  }
 
   return (
-    <VoicePlayerContext.Provider value={{
-      currentItem,
-      setCurrentItem,
-      playing,
-      setPlaying,
-      character,
-      setCharacter,
-    }}>
+    <VoicePlayerContext.Provider
+      value={{
+        currentItem,
+        setCurrentItem,
+        newsItems,
+        setNewsItems,
+        currentIndex,
+        setCurrentIndex,
+      }}
+    >
       {children}
     </VoicePlayerContext.Provider>
   )
@@ -44,6 +55,8 @@ export function VoicePlayerProvider({ children }: { children: ReactNode }) {
 
 export function useVoicePlayer() {
   const context = useContext(VoicePlayerContext)
-  if (!context) throw new Error("useVoicePlayer must be used within a VoicePlayerProvider")
+  if (context === undefined) {
+    throw new Error('useVoicePlayer must be used within a VoicePlayerProvider')
+  }
   return context
 }

@@ -3,7 +3,7 @@ import {
 
     SettingIcon,
     GraphicIcon,
-} from "@/app/assets/icons/index";
+} from "@/assets/icons/index";
 import SafeImage from "@/components/SafeImage";
 
 export default function HomeHeader() {

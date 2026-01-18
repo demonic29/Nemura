@@ -8,9 +8,9 @@ import DialogueBox from "@/components/DialogueBox";
 import LottiePlayer from "@/components/LottiePlayer";
 import Fade from "@/components/Fade";
 
-import { ArrowRightIcon } from "@/app/assets/icons";
+import { ArrowRightIcon } from "@/assets/icons";
 
-import smileJson from "@/app/assets/animations/smile-nemura.json";
+import smileJson from "@/assets/animations/smile-nemura.json";
 
 function ArigatouContent() {
   const router = useRouter();

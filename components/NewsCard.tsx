@@ -5,6 +5,7 @@
 import SafeImage from './SafeImage'
 import { useState } from 'react'
 import { AddCircleIcon, RemoveCircleIcon, PlayCircleIcon } from "@/assets/icons"
+import Link from 'next/link'
 
 export type VoiceItem = {
   title: string
@@ -47,54 +48,57 @@ export default function NewsCard({
   const imageUrl = item.imageUrl || item["hatena:imageurl"]
 
   return (
-    <div
-      className="flex w-full h-[100px] bg-[#3A86FF]/10 rounded-xl overflow-hidden relative cursor-pointer hover:bg-[#3A86FF]/20 transition-colors"
-    >
+    <Link href={`/latest/${encodeURIComponent(item.title)}`}>
+      <div
+        className="flex w-full mb-4 h-[100px] bg-[#3A86FF]/10 rounded-xl overflow-hidden relative cursor-pointer hover:bg-[#3A86FF]/20 transition-colors"
+      >
 
-      {/* 画像 */}
-      <div className="w-[100px] h-full relative flex-shrink-0">
-        imageUrl ? (
-          <SafeImage
-          src={imageUrl}
-          alt={item.title}
-          fill
-          className="object-cover"
-        />
-        )
-      </div>
+        {/* 画像 */}
+        <div className="w-[100px] h-full relative flex-shrink-0">
+          {imageUrl && (
+            <SafeImage
+              src={imageUrl}
+              alt={item.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 740px) 100vw"
+            />
+          )}
+        </div>
 
-      {/* テキスト */}
-      <div className="flex-grow flex flex-col relative px-2 pt-3">
-        <h3 className="text-sm font-semibold line-clamp-2 text-white">
-          {item.title}
-        </h3>
-        <div className="absolute bottom-2 left-0 px-2 text-xs text-gray-400">
-          {subject}
+        {/* テキスト */}
+        <div className="flex-grow flex flex-col relative px-2 pt-3">
+          <h3 className="text-sm font-semibold line-clamp-2 text-white">
+            {item.title}
+          </h3>
+          <div className="absolute bottom-2 left-0 px-2 text-xs text-gray-400">
+            {subject}
+          </div>
+        </div>
+
+        {/* アクションボタン（常にアイコン） */}
+        <div className="absolute bottom-1 right-2 flex items-center space-x-2">
+          <button
+            onClick={handleToggleAdd}
+            className="p-1 hover:opacity-70 transition-opacity"
+          >
+            {isPlaylistMode ? (
+              <RemoveCircleIcon className="w-7 h-7 text-gray-400" />
+            ) : added ? (
+              <RemoveCircleIcon className="w-7 h-7 text-gray-400" />
+            ) : (
+              <AddCircleIcon className="w-7 h-7 text-gray-400" />
+            )}
+          </button>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); onPlayClick?.() }}
+            className="p-1 hover:opacity-70 transition-opacity"
+          >
+            <PlayCircleIcon className="w-7 h-7 text-gray-400" />
+          </button>
         </div>
       </div>
-
-      {/* アクションボタン（常にアイコン） */}
-      <div className="absolute bottom-1 right-2 flex items-center space-x-2">
-        <button
-          onClick={handleToggleAdd}
-          className="p-1 hover:opacity-70 transition-opacity"
-        >
-          {isPlaylistMode ? (
-            <RemoveCircleIcon className="w-7 h-7 text-gray-400" />
-          ) : added ? (
-            <RemoveCircleIcon className="w-7 h-7 text-gray-400" />
-          ) : (
-            <AddCircleIcon className="w-7 h-7 text-gray-400" />
-          )}
-        </button>
-
-        <button
-          onClick={(e) => { e.stopPropagation(); onPlayClick?.() }}
-          className="p-1 hover:opacity-70 transition-opacity"
-        >
-          <PlayCircleIcon className="w-7 h-7 text-gray-400" />
-        </button>
-      </div>
-    </div>
+    </Link>
   )
 }

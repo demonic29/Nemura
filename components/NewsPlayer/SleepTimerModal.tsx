@@ -3,14 +3,15 @@
 'use client'
 
 import React from 'react'
-import { CheckIcon } from "@icons/index"
+import { CheckIcon } from "@/assets/icons/index"
 
-const TIMES = [
+const TIMES: { label: string; minutes: number | 'track-end' }[] = [
   { label: '1時間', minutes: 60 },
   { label: '30分', minutes: 30 },
   { label: '15分', minutes: 15 },
   { label: '5分', minutes: 5 },
-  { label: 'トラック終了時', minutes: 0 } // track-end
+  { label: '1分', minutes: 1},
+  { label: 'トラック終了時', minutes: 'track-end' }
 ]
 
 type Props = {
@@ -25,10 +26,13 @@ export default function SleepTimerModal({ onCloseAction, onSelectTime }: Props) 
     setSelectedTime(timeLabel)
 
     const timeObj = TIMES.find(t => t.label === timeLabel)
-    const minutes = timeObj?.minutes === 0 ? 'track-end' : timeObj?.minutes || 0
+    const minutes =
+      timeObj?.minutes === 0 ? 'track-end' : timeObj?.minutes ?? 0
 
     onSelectTime(minutes)
+    onCloseAction() // ✅ close modal
   }
+
 
   return (
     <div className="relative inline-block text-sm">

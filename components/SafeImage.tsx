@@ -1,11 +1,10 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-
-const FALLBACK = "/default-image.png";
+import loadingImg from '@/app/loading-img.png';
 
 export default function SafeImage({ src, alt,sizes, ...props }: any) {
-    const [imgSrc, setImgSrc] = useState(src || FALLBACK);
+    const [imgSrc, setImgSrc] = useState(src || loadingImg);
 
     return (
         <Image
@@ -13,7 +12,8 @@ export default function SafeImage({ src, alt,sizes, ...props }: any) {
             src={imgSrc}
             sizes={sizes}
             alt={alt}
-            onError={() => setImgSrc(FALLBACK)}
+            onError={() => setImgSrc(loadingImg)}
+            priority
         />
     );
 }

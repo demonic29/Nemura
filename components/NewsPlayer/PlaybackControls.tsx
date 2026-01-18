@@ -1,5 +1,3 @@
-// 再生コントロール
-
 'use client'
 
 import React from 'react'
@@ -16,13 +14,17 @@ interface PlaybackControlsProps {
   onToggle: () => void;
   onRewind: () => void;
   onForward: () => void;
+  onNext?: () => void;
+  onPrev?: () => void;
 }
 
 export default function PlaybackControls({ 
   isPlaying, 
   onToggle, 
   onRewind, 
-  onForward 
+  onForward,
+  onNext,
+  onPrev
 }: PlaybackControlsProps) {
   return (
     <div className="w-full flex flex-col items-center px-8">
@@ -33,12 +35,15 @@ export default function PlaybackControls({
           onClick={onRewind}
           className="text-white-soft opacity-80 hover:opacity-100 transition-all active:scale-90"
         >
-          <Replay10Icon className="w-8 h-8" />
+          <Replay10Icon className="w-full h-full" />
         </button>
 
         {/* 前へ */}
-        <button className="text-white-soft opacity-90 hover:opacity-100 transition-all active:scale-90 rotate-180">
-          <SkipNextIcon className="w-[50px] h-[50px]" />
+        <button 
+          onClick={onPrev}
+          className="text-white-soft opacity-90 hover:opacity-100 transition-all active:scale-90 rotate-180"
+        >
+          <SkipNextIcon className="w-full h-full" />
         </button>
 
         {/* 再生・一時停止 */}
@@ -56,8 +61,11 @@ export default function PlaybackControls({
         </button>
 
         {/* 次へ */}
-        <button className="text-white-soft opacity-90 hover:opacity-100 transition-all active:scale-90">
-          <SkipNextIcon className="w-[50px] h-[50px]" />
+        <button 
+          onClick={onNext}
+          className="text-white-soft opacity-90 hover:opacity-100 transition-all active:scale-90"
+        >
+          <SkipNextIcon className="w-full h-full" />
         </button>
 
         {/* 10秒進む */}
@@ -65,7 +73,7 @@ export default function PlaybackControls({
           onClick={onForward}
           className="text-white-soft opacity-80 hover:opacity-100 transition-all active:scale-90"
         >
-          <Forward10Icon className="w-8 h-8" />
+          <Forward10Icon className="w-full h-full" />
         </button>
       </div>
     </div>

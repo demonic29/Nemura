@@ -1,9 +1,9 @@
-// NewsPlayer/index.tsx
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Characters } from "@/app/ai-character/config"
+
+// components
 import SpeechNemura from "./SpeechNemura"
 import NewsHeader from "./NewsHeader"
 import AudioSeekBar from "./AudioSeekBar"
@@ -16,102 +16,155 @@ export type VoiceItem = {
   body?: string
   imageUrl?: string
   estimatedDuration?: number
+  newsId?: string
 }
 
 export type NewsPlayerProps = {
   item: VoiceItem
+  audioUrl: string | null
+  isPlaying: boolean
+  setIsPlaying: (v: boolean) => void
+  onNext?: () => void
+  onPrev?: () => void
+  hasNext?: boolean
+  hasPrev?: boolean
   showNemura?: boolean
 }
 
-export default function NewsPlayer({ item, showNemura = false }: NewsPlayerProps) {
+export default function NewsPlayer({
+  item,
+  audioUrl,
+  isPlaying,
+  setIsPlaying,
+  onNext,
+  onPrev,
+  hasNext = false,
+  hasPrev = false,
+  showNemura = false
+}: NewsPlayerProps) {
   const router = useRouter()
-  const news = {
-    title: item.title,
-    body: item.body || '',
-    imageUrl: item.imageUrl,
-    estimatedDuration: item.estimatedDuration || 180
-  }
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const [currentTime, setCurrentTime] = useState(0)
-  const [isPlaying, setIsPlaying] = useState(false)
   const [playbackSpeed, setPlaybackSpeed] = useState('1X')
-  const [sleepMinutes, setSleepMinutes] = useState<number | 'track-end'>('track-end')
-  const [character, setCharacter] = useState(Characters[0]) // 初期キャラクター
 
-  const playAudio = (text: string, speaker: string) => {
-    if (typeof window === "undefined") return
-    window.speechSynthesis.cancel()
-    const utterance = new SpeechSynthesisUtterance(text)
-    const voice = window.speechSynthesis.getVoices().find(v => v.name === speaker)
-    if (voice) utterance.voice = voice
-    utterance.lang = "ja-JP"
-    utterance.rate = 1
-    utterance.pitch = 1
-    window.speechSynthesis.speak(utterance)
-  }
-
-  // 再生タイマーはそのまま
-  const handleSeek = (amount: number) => {
-    setCurrentTime(prev => Math.min(Math.max(prev + amount, 0), news.estimatedDuration))
-  }
-
+  // ✅ PLAY / PAUSE (SINGLE SOURCE OF TRUTH)
   useEffect(() => {
-    let timer: NodeJS.Timeout
-    let sleepTimer: NodeJS.Timeout
+    const audio = audioRef.current
+    if (!audio || !audioUrl) return
 
     if (isPlaying) {
-      timer = setInterval(() => {
-        setCurrentTime(prev => {
-          if (prev >= news.estimatedDuration) {
-            setIsPlaying(false)
-            return prev
-          }
-          const numericSpeed = playbackSpeed === '1X' ? 1 : parseFloat(playbackSpeed)
-          return prev + 1 * numericSpeed
-        })
-      }, 1000)
+      audio.play().catch(err => {
+        if (err.name !== 'AbortError') {
+          console.error('Play failed:', err)
+          setIsPlaying(false)
+        }
+      })
+    } else {
+      audio.pause()
+    }
+  }, [isPlaying, audioUrl, setIsPlaying])
 
-      if (sleepMinutes !== 'track-end') {
-        sleepTimer = setTimeout(() => {
-          setIsPlaying(false)
-          router.push('/good-night')
-        }, Number(sleepMinutes) * 60 * 1000)
-      } else {
-        const remaining = Math.max(news.estimatedDuration - currentTime, 0)
-        sleepTimer = setTimeout(() => {
-          setIsPlaying(false)
-          router.push('/good-night')
-        }, remaining * 1000)
+  // ✅ Playback speed
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate =
+        playbackSpeed === '1X'
+          ? 1
+          : parseFloat(playbackSpeed.replace('X', ''))
+    }
+  }, [playbackSpeed])
+
+  // ✅ CLEANUP ON UNMOUNT
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+      }
+    }
+  }, [])
+
+  // Sleep timer
+  const [sleepMinutes, setSleepMinutes] = useState<number | 'track-end'>('track-end')
+  useEffect(() => {
+    let sleepTimer: NodeJS.Timeout | undefined
+
+    const audio = audioRef.current
+    if (!audio) return
+
+    // ⏰ Fixed-minute sleep timer
+    if (isPlaying && typeof sleepMinutes === 'number') {
+      sleepTimer = setTimeout(() => {
+        setIsPlaying(false)
+        audio.pause()
+        router.push('/good-night')
+      }, sleepMinutes * 60 * 1000)
+    }
+
+    // 🎵 Track-end sleep timer
+    if (isPlaying && sleepMinutes === 'track-end') {
+      const handleEnded = () => {
+        setIsPlaying(false)
+        router.push('/good-night')
+      }
+
+      audio.addEventListener('ended', handleEnded)
+
+      return () => {
+        audio.removeEventListener('ended', handleEnded)
       }
     }
 
     return () => {
-      clearInterval(timer)
-      clearTimeout(sleepTimer)
+      if (sleepTimer) clearTimeout(sleepTimer)
     }
-  }, [isPlaying, playbackSpeed, sleepMinutes, currentTime, news.estimatedDuration, router])
+  }, [isPlaying, sleepMinutes, router, setIsPlaying])
 
   return (
     <div className="w-full max-w-xl h-[100svh] flex flex-col">
-      
+
+      {/* Hidden audio element */}
+      <audio
+        ref={audioRef}
+        key={item.newsId}
+        src={audioUrl || ''}
+        preload="auto"
+        crossOrigin="anonymous"
+        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+        onEnded={() => {
+          if (hasNext) {
+            onNext?.(); // Parent changes index, remounts this component
+          }
+        }}
+      />
+
       {/* 上：固定 */}
       <div className="shrink-0 space-y-4 pb-[36px]">
-        {showNemura && <SpeechNemura isPlaying={isPlaying} />}
+        {showNemura && <SpeechNemura isPlaying={isPlaying && !!audioUrl} />}
         <div className="px-8">
-          <NewsHeader title={news.title} estimatedDuration={news.estimatedDuration} />
+          <NewsHeader title={item.title} />
         </div>
         <div className="px-8">
           <AudioSeekBar
-            duration={news.estimatedDuration}
+            duration={item.estimatedDuration || 0}
             current={currentTime}
-            onSeek={setCurrentTime}
+            onSeek={(time) => {
+              if (audioRef.current) audioRef.current.currentTime = time
+            }}
           />
         </div>
       </div>
 
       {/* 本文：レスポンシブ＋スクロール */}
       <div className="flex-1 max-h-[6lh] overflow-y-auto">
-        <NewsBody body={news.body} />
+        {
+          audioUrl ? (
+            <NewsBody body={item.body || ''} />
+          ) :
+            <div className="text-white/60 text-center">
+              音声を準備中...
+            </div>
+        }
       </div>
 
       {/* 下：固定 */}
@@ -119,8 +172,10 @@ export default function NewsPlayer({ item, showNemura = false }: NewsPlayerProps
         <PlaybackControls
           isPlaying={isPlaying}
           onToggle={() => setIsPlaying(!isPlaying)}
-          onRewind={() => handleSeek(-10)}
-          onForward={() => handleSeek(10)}
+          onNext={hasNext ? onNext : undefined}
+          onPrev={hasPrev ? onPrev : undefined}
+          onRewind={() => { if (audioRef.current) audioRef.current.currentTime -= 10 }}
+          onForward={() => { if (audioRef.current) audioRef.current.currentTime += 10 }}
         />
         <div className="pt-[36px]">
           <ControlBar
@@ -131,7 +186,6 @@ export default function NewsPlayer({ item, showNemura = false }: NewsPlayerProps
           />
         </div>
       </div>
-
     </div>
   )
 }

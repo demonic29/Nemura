@@ -52,7 +52,7 @@ export default function NewsDetailsPage() {
         // Fetch news data
         const fetchNews = async () => {
             try {
-                const response = await fetch("/api/hatena?type=new");
+                const response = await fetch("/api/hatena?type=popular");
                 const data = await response.json();
 
                 if (Array.isArray(data)) {
@@ -158,6 +158,8 @@ export default function NewsDetailsPage() {
                         <i className={`fa-regular fa-circle-play ${isPlaying ? 'animate-spin' : ''}`}></i>
                     </button>
                 </div>
+
+
 
                 {/* Description/Summary */}
                 <div className="pt-4">

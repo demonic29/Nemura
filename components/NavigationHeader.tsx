@@ -3,7 +3,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { ArrowRightIcon, SettingIcon } from "@icons/index"
+import { ArrowRightIcon, SettingIcon } from "@/assets/icons/index"
 
 type Props = {
   showSetting?: boolean

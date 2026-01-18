@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowRightIcon, AddCircleIcon, PlayCircleIcon } from "@/app/assets/icons";
+import { ArrowRightIcon, AddCircleIcon, PlayCircleIcon } from "@/assets/icons";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 

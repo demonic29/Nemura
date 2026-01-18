@@ -27,7 +27,7 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/hatena?type=new")
+    fetch("/api/hatena?type=popular")
       .then((res) => res.json())
       .then((data) => {
         if (data.error) setError(data.error);
@@ -37,7 +37,7 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/hatena?type=popular")
+    fetch("/api/hatena?type=new")
       .then((res) => res.json())
       .then((data) => {
         if (data.error) setError(data.error);
@@ -76,13 +76,14 @@ export default function HomePage() {
 
       {/* graphic */}
       <div className="flex justify-center my-4">
-        <div className="relative w-[398px]  h-[132px] md:w-48 md:h-48">
+        <div className="relative w-[398px] h-[132px] md:w-48 md:h-48">
           <SafeImage
             src="/graphic-nemura.png"
             alt="Description"
             fill
-            sizes="400px"
+            sizes="(max-width: 740px) 100vw"
             className="object-contain rounded-lg"
+
           />
         </div>
       </div>

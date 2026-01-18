@@ -11,9 +11,9 @@ import {
   CheckIcon,
   AddCircleIcon, 
   RemoveCircleIcon 
-} from "@/app/assets/icons";
+} from "@/assets/icons";
 
-import smileJson from "@/app/assets/animations/smile-nemura.json";
+import smileJson from "@/assets/animations/smile-nemura.json";
 
 const TOPICS = [
   { id: "world", label: "世の中" },

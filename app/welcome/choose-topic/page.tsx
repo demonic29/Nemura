@@ -11,9 +11,9 @@ import {
   ArrowRightIcon,
   AddCircleIcon,
   RemoveCircleIcon
-} from "@/app/assets/icons";
+} from "@/assets/icons";
 
-import smileJson from "@/app/assets/animations/smile-nemura.json";
+import smileJson from "@/assets/animations/smile-nemura.json";
 
 // firebase
 import { auth, db } from "@/app/lib/firebase/firebase";
