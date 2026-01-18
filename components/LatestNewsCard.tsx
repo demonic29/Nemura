@@ -26,9 +26,9 @@ interface PlaylistItem {
     addedAt: any
 }
 
-export default function LatestNewsCard({i, playAudio, index, id}: any) {
-    
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+export default function LatestNewsCard({ i, playAudio, index, id }: any) {
+
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [isAdding, setIsAdding] = useState(false);
     const [playlist, setPlaylist] = useState<PlaylistItem[]>([]);
     const [user, setUser] = useState<any>(null);
@@ -47,7 +47,7 @@ export default function LatestNewsCard({i, playAudio, index, id}: any) {
         if (!user) return;
 
         const userDocRef = doc(db, "users", user.uid);
-        
+
         const unsubscribe = onSnapshot(userDocRef, (snapshot) => {
             const data = snapshot.data();
             const items = (data?.playlist || []) as PlaylistItem[];
@@ -81,14 +81,14 @@ export default function LatestNewsCard({i, playAudio, index, id}: any) {
             });
 
             console.log('Document added to user playlist');
-            
+
             // Open modal after successful save
             onOpen();
             setIsAdding(true);
         } catch (error) {
             console.error('Error adding document: ', error);
             alert('エラーが発生しました');
-        }finally{
+        } finally {
             setIsAdding(true);
         }
     };
@@ -130,7 +130,7 @@ export default function LatestNewsCard({i, playAudio, index, id}: any) {
                 </div>
 
                 <div className="flex-grow flex flex-col">
-                    <Link href={`/latest/${i.title}`}>
+                    <Link href={`/latest/${encodeURIComponent(i.title)}`}>
                         <h3 className="normal font-semibold text-gray-200 line-clamp-3">
                             {i.title}
                         </h3>
@@ -141,26 +141,26 @@ export default function LatestNewsCard({i, playAudio, index, id}: any) {
                             <span className="text-blue-400">🌐</span>
                             <span>
                                 {Array.isArray(i["dc:subject"])
-                                ? i["dc:subject"][1]
-                                : i["dc:subject"]}
+                                    ? i["dc:subject"][1]
+                                    : i["dc:subject"]}
                             </span>
                         </div>
                     </div>
                 </div>
 
                 <div className="absolute bottom-2  right-2 flex items-center space-x-2">
-                    <button 
+                    <button
                         onClick={handleAddClick}
                         disabled={isAdding}
                     >
                         {
-                          isAdding ? (
-                            <RemoveCircleIcon 
-                            className={`w-6 h-6 cursor-pointer text-gray-400`}
-                        />  
-                          ) : <AddCircleIcon
-                            className={`w-6 h-6 cursor-pointer text-gray-400`}
-                        />}
+                            isAdding ? (
+                                <RemoveCircleIcon
+                                    className={`w-6 h-6 cursor-pointer text-gray-400`}
+                                />
+                            ) : <AddCircleIcon
+                                className={`w-6 h-6 cursor-pointer text-gray-400`}
+                            />}
                     </button>
 
                     <button onClick={() => playAudio(i.title, "20")}>
@@ -170,79 +170,79 @@ export default function LatestNewsCard({i, playAudio, index, id}: any) {
             </div>
 
             {/* Modal showing all saved posts */}
-            <Modal 
-                isOpen={isOpen} 
+            <Modal
+                isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 size="2xl"
                 className={`bg-[url('/playlist-bg.png')] bg-center m-0 rounded-b-none rounded-t-3xl text-white`}
                 scrollBehavior="inside"
             >
                 <ModalContent>
-                {(onClose) => (
-                    <>
-                    <ModalHeader className="flex flex-col gap-1">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <i className="fa-solid fa-list-check"></i>
-                                <span>プレイリスト</span>
-                            </div>
-                            <span className="text-sm text-gray-500 font-normal">
-                                {playlist.length} 件
-                            </span>
-                        </div>
-                    </ModalHeader>
-                    <ModalBody className='px-3'>
-                        {playlist.length === 0 ? (
-                            <div className="text-center py-8 text-gray-500">
-                                <i className="fa-regular fa-folder-open text-4xl mb-2"></i>
-                                <p>プレイリストは空です</p>
-                            </div>
-                        ) : (
-                            <div className="space-y-4">
-                                {playlist.map((item) => (
-                                    <div
-                                        key={item.id}
-                                        className="flex gap-3 bg-[url('/playlist-bg.png')] bg-bottom p-3 rounded-lg"
-                                    >
-                                        <div className="w-16 h-16 relative flex-shrink-0">
-                                            <SafeImage
-                                                src={item.imageUrl}
-                                                alt={item.title}
-                                                fill
-                                                // sizes="64px"
-                                                className="object-cover rounded-lg"
-                                            />
-                                        </div>
-                                        <div className="flex-grow min-w-0">
-                                            <h4 className="font-semibold text-sm line-clamp-2">
-                                                {item.title}
-                                            </h4>
-                                            <p className="text-xs text-gray-300 mt-1">
-                                                {item.category}
-                                            </p>
-                                        </div>
-                                        <button
-                                            onClick={() => removeFromPlaylist(item.id)}
-                                            className="flex-shrink-0 text-red-500 hover:text-red-700 transition-colors"
-                                        >
-                                            <i className="fa-solid fa-trash text-sm"></i>
-                                        </button>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <i className="fa-solid fa-list-check"></i>
+                                        <span>プレイリスト</span>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </ModalBody>
-                    <ModalFooter>
-                        {/* <Button 
+                                    <span className="text-sm text-gray-500 font-normal">
+                                        {playlist.length} 件
+                                    </span>
+                                </div>
+                            </ModalHeader>
+                            <ModalBody className='px-3'>
+                                {playlist.length === 0 ? (
+                                    <div className="text-center py-8 text-gray-500">
+                                        <i className="fa-regular fa-folder-open text-4xl mb-2"></i>
+                                        <p>プレイリストは空です</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        {playlist.map((item) => (
+                                            <div
+                                                key={item.id}
+                                                className="flex gap-3 bg-[url('/playlist-bg.png')] bg-bottom p-3 rounded-lg"
+                                            >
+                                                <div className="w-16 h-16 relative flex-shrink-0">
+                                                    <SafeImage
+                                                        src={item.imageUrl}
+                                                        alt={item.title}
+                                                        fill
+                                                        // sizes="64px"
+                                                        className="object-cover rounded-lg"
+                                                    />
+                                                </div>
+                                                <div className="flex-grow min-w-0">
+                                                    <h4 className="font-semibold text-sm line-clamp-2">
+                                                        {item.title}
+                                                    </h4>
+                                                    <p className="text-xs text-gray-300 mt-1">
+                                                        {item.category}
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    onClick={() => removeFromPlaylist(item.id)}
+                                                    className="flex-shrink-0 text-red-500 hover:text-red-700 transition-colors"
+                                                >
+                                                    <i className="fa-solid fa-trash text-sm"></i>
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </ModalBody>
+                            <ModalFooter>
+                                {/* <Button 
                             color="primary" 
                             onPress={onClose}
                             className="w-full"
                         >
                             閉じる
                         </Button> */}
-                    </ModalFooter>
-                    </>
-                )}
+                            </ModalFooter>
+                        </>
+                    )}
                 </ModalContent>
             </Modal>
         </>
