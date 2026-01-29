@@ -87,7 +87,7 @@ function ArigatouContent() {
               onClick={handleBack}
               className="flex items-center gap-1 text-white-soft bg-button backdrop-blur-md border border-white/0 px-4 py-2 rounded-full transition-all active:scale-95 drop-shadow-white-glow"
             >
-              <ArrowRightIcon className="rotate-180 w-5 h-5" />
+              <ArrowRightIcon className="rotate-180" />
               <span className="text-base font-medium">もどる</span>
             </button>
           </div>
@@ -102,7 +102,7 @@ function ArigatouContent() {
                 className="flex items-center gap-1 text-white-soft bg-button backdrop-blur-md border border-white/0 px-6 py-2.5 rounded-full font-bold transition-all active:scale-95 drop-shadow-white-glow"
               >
                 <span className="text-base">次へ</span>
-                <ArrowRightIcon className="w-5 h-5" />
+                <ArrowRightIcon />
               </button>
             )}
           </div>

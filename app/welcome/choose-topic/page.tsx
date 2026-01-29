@@ -130,9 +130,9 @@ export default function TopicSelectionPage() {
                   `}
                 >
                   {isSelected ? (
-                    <RemoveCircleIcon className="w-5 h-5 shrink-0" />
+                    <RemoveCircleIcon className="shrink-0" />
                   ) : (
-                    <AddCircleIcon className="w-5 h-5 shrink-0 text-gray-soft" />
+                    <AddCircleIcon className="shrink-0 text-gray-soft" />
                   )}
                   <span className="text-[15px] font-bold truncate">
                     {topic["dc:subject"]}
@@ -152,7 +152,7 @@ export default function TopicSelectionPage() {
               ${submitting ? "opacity-50 cursor-not-allowed" : ""}
             `}
           >
-            <ArrowRightIcon className="rotate-180 w-5 h-5" />
+            <ArrowRightIcon className="rotate-180" />
             <span className="text-[16px]">もどる</span>
           </button>
 
@@ -170,7 +170,7 @@ export default function TopicSelectionPage() {
             <span className="text-[16px]">
               {submitting ? "保存中..." : "次へ"}
             </span>
-            {!submitting && <ArrowRightIcon className="w-5 h-5" />}
+            {!submitting && <ArrowRightIcon />}
           </button>
         </div>
 

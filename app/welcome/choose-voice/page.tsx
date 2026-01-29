@@ -121,7 +121,7 @@ export default function ChooseVoicePage() {
             disabled={loading}
             className="flex items-center gap-1 text-white-soft bg-button/80 backdrop-blur-md border border-white/0 px-6 py-2.5 rounded-full font-bold transition-all active:scale-95 drop-shadow-white-glow disabled:opacity-50"
           >
-            <ArrowRightIcon className="rotate-180 w-5 h-5" />
+            <ArrowRightIcon className="rotate-180" />
             <span className="text-[16px]">もどる</span>
           </button>
 
@@ -131,7 +131,7 @@ export default function ChooseVoicePage() {
             className="flex items-center gap-1 text-white-soft bg-button backdrop-blur-md border border-white/0 px-8 py-2.5 rounded-full font-bold transition-all active:scale-95 drop-shadow-white-glow disabled:opacity-50"
           >
             <span className="text-[16px]">{loading ? "保存中..." : "確定"}</span>
-            {!loading && <CheckIcon className="w-5 h-5" />}
+            {!loading && <CheckIcon />}
           </button>
         </div>
 
@@ -189,7 +189,7 @@ function VoiceButton({
         `}
       >
         <GraphicIcon
-          className={`w-10 h-10 ${isSelected ? "animate-pulse" : ""}`}
+          className={`scale-[1.5] ${isSelected ? "animate-pulse" : ""}`}
         />
       </div>
 

@@ -96,7 +96,6 @@ function WelcomeContent() {
                 className="fa-solid fa-mitten absolute right-[100px] top-[60px] -translate-y-1/2
                 text-4xl text-white-soft animate-poke drop-shadow-white-glow drop-shadow-cyan-500/50"
               />
-              <FingerPointIcon className="w-18 h-18 text-white-soft drop-shadow-white-glow" />
             </div>
           )}
 
