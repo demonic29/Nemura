@@ -9,6 +9,7 @@ import SafeImage from '@/components/SafeImage';
 import { playAudio } from '@/app/lib/audio';
 import { auth, db } from '@/app/lib/firebase/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { ArrowRightIcon } from '@/app/assets/icons';
 
 export default function NewsDetailsPage() {
     const params = useParams();
@@ -120,9 +121,9 @@ export default function NewsDetailsPage() {
                 {/* Back button */}
                 <button
                     onClick={() => router.back()}
-                    className="text-blue-400 left-2 absolute top-2 text-sm font-semibold"
+                    className="text-blue-400 bg-white-soft left-4  rotate-180 rounded-full p-1 absolute top-8 text-sm font-semibold"
                 >
-                    ← 戻る
+                    <ArrowRightIcon />
                 </button>
 
                 {/* Title */}

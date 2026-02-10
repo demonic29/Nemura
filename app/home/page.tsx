@@ -125,7 +125,7 @@ export default function HomePage() {
         {/* Latest News */}
         <div className="flex flex-col">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-white-soft">最新ニュース</h2>
+            <h2 className="title font-bold text-white-soft">最新ニュース</h2>
             <Link href="/latest" className="flex items-center pt-2">
               <p className="text-[#3A86FF]">すべて見る</p>
               <ChevronRightIcon className="scale-[0.8] text-[#3A86FF] cursor-pointer" />
