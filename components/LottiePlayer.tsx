@@ -17,7 +17,7 @@ export default function LottiePlayer({
     <Lottie
       animationData={data}
       loop={loop}
-      style={{ width, height }}
+      style={{ width, height, margin: 'auto' }}
     />
   );
 }

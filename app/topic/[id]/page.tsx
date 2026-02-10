@@ -163,7 +163,7 @@ export default function NewsDetailsPage() {
 
                 {/* Description/Summary */}
                 <div className="pt-4">
-                    <p className="text-base leading-relaxed text-gray-300">
+                    <p className="text-[16px] tracking-widest leading-relaxed">
                         {newsItem.description || newsItem.summary || "ニュース詳細"}
                     </p>
                 </div>
@@ -175,9 +175,9 @@ export default function NewsDetailsPage() {
                             href={newsItem.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-400 underline text-sm"
+                            className="text-blue-400 underline"
                         >
-                            ソースを見る →
+                            詳細を読む →
                         </a>
                     </div>
                 )}

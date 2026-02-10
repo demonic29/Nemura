@@ -6,15 +6,16 @@ interface DialogueBoxProps {
 
 const DialogueBox: React.FC<DialogueBoxProps> = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="w-full max-w-2xl p-6 mb-16 flex justify-center">
+    <div className="w-full max-w-2xl p-6 flex justify-center">
       <p
         className="
           text-white-soft
           text-center
-          text-2xl
+          text-xl
           leading-relaxed
           break-words
           line-clamp-3
+          font-extrabold
           drop-shadow-white-glow-str
         "
       >

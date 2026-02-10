@@ -67,10 +67,10 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-background-light h-screen w-full px-0 relative flex flex-col overflow-hidden">
+    <div className="bg-background-light h-screen w-full px-0 relative flex flex-col overflow-scroll no-scrollbar">
       <BottomNavigationBar />
       <div className="shrink-0 py-6">
-        <NavigationHeader title="最新ニュース" showBack={false} />
+        <NavigationHeader title="今日の Nemura" showBack={false} />
       </div>
       {error && <p className="text-red-400">{error}</p>}
 
@@ -122,8 +122,8 @@ export default function HomePage() {
         </div>
 
 
-        {/* Topic News */}
-        <div className="flex flex-col" style={{ height: 'calc(100vh - 54px - 16px - 550px)' }}>
+        {/* Latest News */}
+        <div className="flex flex-col">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-white-soft">最新ニュース</h2>
             <Link href="/latest" className="flex items-center pt-2">

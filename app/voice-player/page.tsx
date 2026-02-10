@@ -5,6 +5,8 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import Wave from '@/assets/graphics/wave.svg'
+import waitVoice from '@/public/wait-voice.png'
+import waitBg from '@/public/wait-bg.png'
 
 // firebase
 import { auth, db } from "@/app/lib/firebase/firebase"
@@ -20,6 +22,7 @@ import NewsPlayer from "@/components/NewsPlayer"
 
 // voices
 import { VOICES } from "@/app/lib/voices"
+import Image from "next/image"
 
 type HatenaNews = {
   title: string
@@ -542,17 +545,30 @@ export default function Page() {
   if (audioState === 'loading' && !audioUrl) {
     return (
       <main
-        className="h-screen w-full relative flex flex-col overflow-hidden pt-[54px]"
-        style={{ backgroundImage: 'linear-gradient(to bottom, #00040a, #003569, #004E9A)' }}
-      >
-        <NavigationHeader className="px-6" />
+        className={`h-screen w-full relative flex flex-col overflow-hidden`}
+        style={{
+          backgroundImage: "url('/wait-bg.png')",
+          backgroundSize: 'contain'
+        }}
 
-        <div className="flex-1 flex items-center justify-center">
+      >
+        <NavigationHeader className="px-6 mt-8" />
+
+        <div className="mt-[40%] flex items-center justify-center">
           <div className="text-center">
             <div className="mb-4">
-              <LoadingSpinner />
+              <Image
+                src={waitVoice}
+                width={200}
+                height={200}
+                alt="wait-voice-image"
+                className="mx-auto mb-4 animate-pulse"
+                loading="lazy"
+              />
+              {/* <LoadingSpinner /> */}
             </div>
-            <p className="text-white text-xl">音声を生成中...</p>
+            <p className="text-2xl font-bold text-white-soft">音声を準備中です</p>
+            <p className="text-white-soft text-base">しばらくお待ちください</p>
           </div>
         </div>
 

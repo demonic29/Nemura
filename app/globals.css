@@ -10,6 +10,9 @@ body {
   font-family:"Zen Maru Gothic", sans-serif;
 }
 
+/* body {
+  font-family:"Bahnschrift", sans-serif;
+} */
 
 .fade-enter {
   @apply opacity-0;
@@ -46,4 +49,17 @@ body {
 
 .caption{
   @apply text-[10px];
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
 }

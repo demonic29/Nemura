@@ -77,7 +77,7 @@ export default function NewsCard({
         </div>
 
         {/* アクションボタン（常にアイコン） */}
-        <div className="absolute bottom-1 right-2 flex items-center space-x-2">
+        {/* <div className="absolute bottom-1 right-2 flex items-center space-x-2">
           <button
             onClick={handleToggleAdd}
             className="p-1 hover:opacity-70 transition-opacity"
@@ -97,7 +97,7 @@ export default function NewsCard({
           >
             <PlayCircleIcon className="w-7 h-7 text-gray-400" />
           </button>
-        </div>
+        </div> */}
       </div>
     </Link>
   )

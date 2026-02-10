@@ -20,12 +20,12 @@ export default function BottomNavigationBar() {
     ]
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-[100] bg-black/90 backdrop-blur-md border-t border-white/10 pb-6 pt-4 px-8 sm:px-10 rounded-t-3xl">
+        <nav className="fixed bottom-0 left-0 right-0 z-[100] bg-black/90 backdrop-blur-md border-t border-white/10 py-4 rounded-t-lg px-8 sm:px-10">
             <div className="flex items-center justify-between max-w-[430px] mx-auto w-full">
                 {navItems.map((item) => {
                     const isActive = pathname === item.path
                     const Icon = item.icon
-                    const iconSizeClass = item.small ? 'scale-[1.4]' : 'scale-[1.6]'
+                    const iconSizeClass = item.small ? 'scale-[1]' : 'scale-[1.6]'
 
                     return (
                         <button
@@ -40,7 +40,7 @@ export default function BottomNavigationBar() {
                                 />
                             </div>
                             <span
-                                className={`text-xs text-center font-medium transition-colors duration-300 pt-2 ${isActive ? 'text-button' : 'text-white-soft'
+                                className={`text-xs text-center transition-colors duration-300 pt-2 ${isActive ? 'text-button' : 'text-white-soft'
                                     }`}
                             >
                                 {item.label}

@@ -49,14 +49,14 @@ export default function VerticalNewsCard({
           <h3 className="text-sm font-semibold leading-5 min-h-[2.5rem] line-clamp-2">{item.title}</h3>
           <span className="text-xs text-gray-400 mt-auto">{subject}</span>
 
-          <div className="absolute bottom-2 right-3 flex items-center space-x-3 text-gray-400">
+          {/* <div className="absolute bottom-2 right-3 flex items-center space-x-3 text-gray-400">
             <button onClick={handleToggleAdd} className="hover:opacity-70 transition-opacity">
               {added ? <RemoveCircleIcon className="w-7 h-7" /> : <AddCircleIcon className="w-7 h-7" />}
             </button>
             <button onClick={(e) => { e.stopPropagation(); onPlayClick?.() }} className="hover:opacity-70 transition-opacity">
               <PlayCircleIcon className="w-7 h-7" />
             </button>
-          </div>
+          </div> */}
           
         </div>
 
