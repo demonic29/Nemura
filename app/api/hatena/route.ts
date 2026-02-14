@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { parseStringPromise } from "xml2js";
 
-export const dynamic = 'force-dynamic';
-
 export async function GET(req: Request) {
     try {
         
