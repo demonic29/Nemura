@@ -178,7 +178,7 @@ export default function NewsPlayer({
           onRewind={() => { if (audioRef.current) audioRef.current.currentTime -= 10 }}
           onForward={() => { if (audioRef.current) audioRef.current.currentTime += 10 }}
         />
-        <div className="pt-[36px]">
+        <div className="py-[36px]">
           <ControlBar
             playbackSpeed={playbackSpeed}
             setPlaybackSpeed={setPlaybackSpeed}

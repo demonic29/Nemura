@@ -1,33 +1,32 @@
-// playlist/page.tsx
-
 'use client'
 
 import NavigationHeader from "@/components/NavigationHeader"
 import NewsCard from "@/components/NewsCard"
 import NewsPlayerMini from "@/components/NewsPlayer/NewsPlayerMini"
-import { useVoicePlayer, VoiceItem } from '@/context/VoicePlayerContext'
+import { useVoicePlayer } from '@/context/VoicePlayerContext'
 import BottomNavigationBar from "@/components/BottomNavigationBar"
 import { auth, db } from '@/app/lib/firebase/firebase'
 import { doc, onSnapshot, updateDoc, arrayRemove } from 'firebase/firestore'
+import { VOICES } from '@/app/lib/voices'
 
 import { useState, useRef, useEffect } from "react"
 
 interface PlaylistItem {
     id: string
-    title: string
-    imageUrl: string
-    category: string
-    link: string
+    title?: string
+    description?: string
     addedAt: any
+    voice?: any
 }
 
 export default function PlaylistPage() {
     const [items, setItems] = useState<PlaylistItem[]>([])
     const [user, setUser] = useState<any>(null)
+    const [userVoiceId, setUserVoiceId] = useState<string | null>(null)
     const { playing, currentItem, setCurrentItem, setPlaying } = useVoicePlayer()
     const miniPlayerRef = useRef<HTMLDivElement>(null)
 
-    // Get current user
+    // 🔹 Auth
     useEffect(() => {
         const unsubscribeAuth = auth.onAuthStateChanged((currentUser) => {
             setUser(currentUser)
@@ -35,15 +34,23 @@ export default function PlaylistPage() {
         return () => unsubscribeAuth()
     }, [])
 
-    // Fetch user's playlist from Firebase
+    // 🔹 Fetch Playlist & User Voice Preference
     useEffect(() => {
         if (!user) return
 
         const userDocRef = doc(db, "users", user.uid)
+
         const unsubscribe = onSnapshot(userDocRef, (snapshot) => {
             const data = snapshot.data()
-            const playlistItems = (data?.playlist || []) as PlaylistItem[]
+            const playlistItems = Array.isArray(data?.playlist)
+                ? data.playlist
+                : []
+
             setItems(playlistItems)
+            // 🔥 Fetch voice preference from user doc
+            if (data?.voiceId) {
+                setUserVoiceId(data.voiceId)
+            }
         })
 
         return () => unsubscribe()
@@ -55,91 +62,95 @@ export default function PlaylistPage() {
         try {
             const userDocRef = doc(db, "users", user.uid)
             const itemToRemove = items.find(item => item.id === itemId)
-            
+
             if (itemToRemove) {
                 await updateDoc(userDocRef, {
                     playlist: arrayRemove(itemToRemove)
                 })
             }
-            
-            setItems(prev => prev.filter(item => item.id !== itemId))
+
             if (currentItem?.title === itemToRemove?.title) {
                 setPlaying(false)
                 setCurrentItem(null)
             }
+
         } catch (error) {
-            console.error("Error removing item from playlist:", error)
+            console.error("Error removing item:", error)
         }
     }
 
     const handlePlay = (item: PlaylistItem) => {
+        // 🔥 Find voice from VOICES array using user's voiceId
+        const selectedVoice = VOICES.find(v => v.id === userVoiceId) ?? VOICES[0]
+
         setCurrentItem({
             title: item.title,
-            body: item.category,
-            imageUrl: item.imageUrl,
-        })
+            body: item.title,
+            voice: selectedVoice
+        } as any)
         setPlaying(true)
     }
 
-    // 外クリックでMiniPlayerを閉じる
+    // 🔹 Close MiniPlayer on outside click
     useEffect(() => {
-        const handleCloseMini = () => {
-            setPlaying(false)
-            setCurrentItem(null)
-        }
-
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 miniPlayerRef.current &&
                 !miniPlayerRef.current.contains(event.target as Node)
             ) {
-                handleCloseMini()
+                setPlaying(false)
+                setCurrentItem(null)
             }
         }
+
         if (playing) {
             document.addEventListener("mousedown", handleClickOutside)
         }
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutside)
         }
     }, [playing, setCurrentItem, setPlaying])
 
     return (
-        <div className="bg-background-light h-screen w-full relative flex flex-col overflow-hidden">
-            <div className="relative w-full flex flex-col overflow-hidden">
-                <div className="h-[54px] shrink-0" />
-                <BottomNavigationBar />
-                    <NavigationHeader title="選択されたプレイリスト" />
+        <div className="bg-background-light pt-8 min-h-screen w-full relative flex flex-col overflow-hidden">
 
-                <div className="flex-1 flex flex-col px-6 mt-6 z-20 overflow-y-auto pb-32">
-                    <div className="space-y-4">
-                        {items.map((item) => (
-                            <NewsCard
-                                key={item.id}
-                                item={item}
-                                onPlayClick={() => handlePlay(item)}
-                                onToggleAdd={(added) => {
-                                    if (!added) handleRemove(item.id)
-                                }}
-                                isPlaylistMode={true}
-                            />
-                        ))}
-                    </div>
+            <BottomNavigationBar />
+            <NavigationHeader title="選択されたプレイリスト" />
 
-                    {items.length === 0 && (
-                        <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-                            <p>リストにニュースがありません</p>
-                        </div>
-                    )}
+            <div className="flex-1 flex flex-col px-6 mt-6 overflow-y-auto pb-32">
+                <div className="space-y-4">
+                    {items.map((item) => (
+                        <NewsCard
+                            key={item.id}
+                            item={{ ...item, title: item.title || "Untitled" }}
+                            onPlayClick={() => handlePlay(item)}
+                            onToggleAdd={(added) => {
+                                if (!added) handleRemove(item.id)
+                            }}
+                            isPlaylistMode={true}
+                        />
+                    ))}
                 </div>
+
+                {items.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+                        <p>リストにニュースがありません</p>
+                    </div>
+                )}
             </div>
 
-            {/* ミニプレイヤー */}
-            {playing && currentItem && (
-                <div ref={miniPlayerRef} className="absolute bottom-0 left-0 right-0 z-[200]">
-                    <NewsPlayerMini isOpen={true} />
-                </div>
-            )}
+            {/* 🔥 Animated Mini Player */}
+            <div
+                ref={miniPlayerRef}
+                className={`
+                    fixed bottom-0 left-0 right-0 z-[200]
+                    transform transition-transform duration-300 ease-in-out
+                    ${playing ? "translate-y-0" : "translate-y-full"}
+                `}
+            >
+                <NewsPlayerMini isOpen={playing} />
+            </div>
         </div>
     )
 }

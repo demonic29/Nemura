@@ -69,7 +69,7 @@ export default function HomePage() {
   return (
     <div className="bg-background-light h-screen w-full px-0 relative flex flex-col overflow-scroll no-scrollbar">
       <BottomNavigationBar />
-      <div className="shrink-0 py-6">
+      <div className="shrink-0">
         <NavigationHeader title="今日の Nemura" showBack={false} />
       </div>
       {error && <p className="text-red-400">{error}</p>}

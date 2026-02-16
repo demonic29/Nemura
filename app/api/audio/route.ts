@@ -1,34 +1,35 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import axios from 'axios'
 
 export async function POST(req: NextRequest) {
   try {
-    // テキストとキャラクターを取得
-    const { text, speaker } = await req.json()
+    const { text, speaker = 42 } = await req.json()
 
-    // 音声合成用のクエリ作成
     const responseQuery = await axios.post(
-      `${process.env.VOICEVOX_URL}/audio_query?speaker=${speaker}&text=${text}`
+      `${process.env.VOICEVOX_URL}/audio_query`,
+      null,
+      { params: { speaker, text } }
     )
 
-    // クエリを取得
     const query = responseQuery.data
 
-    // 音声を合成
     const responseSynthesis = await axios.post(
-      `${process.env.VOICEVOX_URL}/synthesis?speaker=${speaker}`,
-        query,
-        {
-            responseType: 'arraybuffer',
-        }
+      `${process.env.VOICEVOX_URL}/synthesis`,
+      query,
+      {
+        params: { speaker },
+        responseType: 'arraybuffer',
+      }
     )
 
-    // base64形式に変換
-    const base64Data = Buffer.from(responseSynthesis.data, 'binary').toString('base64')
+    return new Response(responseSynthesis.data, {
+      headers: {
+        "Content-Type": "audio/wav",
+      },
+    })
 
-    return NextResponse.json({ response: base64Data })
   } catch (error) {
     console.log('error', error)
-    return NextResponse.error()
+    return new Response("Error generating audio", { status: 500 })
   }
 }

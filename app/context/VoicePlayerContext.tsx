@@ -10,7 +10,9 @@ export type VoiceItem = {
     title: string
     body?: string
     imageUrl?: string
-    estimatedDuration?: number
+    estimatedDuration?: number,
+    voice?: any
+    
 }
 
 type VoicePlayerContextType = {

@@ -609,7 +609,7 @@ export default function Page() {
 
   return (
     <main
-      className="h-screen w-full relative flex flex-col overflow-hidden pt-[54px]"
+      className="h-screen w-full relative flex flex-col overflow-hidden pt-8"
       style={{ backgroundImage: 'linear-gradient(to bottom, #00040a, #003569, #004E9A)' }}
     >
       <NavigationHeader />

@@ -4,6 +4,7 @@ export type CharacterType = {
     value: string
     label: string
     word: string
+    
 }
 
 

@@ -70,6 +70,7 @@ export default function LatestNewsCard({ i, playAudio, index, id }: any) {
                 id: Date.now().toString(),
                 title: i.title,
                 imageUrl: i["hatena:imageurl"],
+                desc: i.description,
                 category: Array.isArray(i["dc:subject"]) ? i["dc:subject"][1] : i["dc:subject"],
                 link: i.link,
                 addedAt: new Date().toISOString(),

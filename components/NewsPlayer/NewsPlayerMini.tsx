@@ -2,7 +2,7 @@
 'use client'
 
 import { useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import NewsHeader from "./NewsHeader"
 import AudioSeekBar from "./AudioSeekBar"
 import PlaybackControls from "./PlaybackControls"
@@ -40,6 +40,36 @@ export default function NewsPlayerMini({ isOpen }: Props) {
     return () => clearInterval(timer)
   }, [isPlaying, playbackSpeed, currentItem])
 
+  // const audioRef = useRef<HTMLAudioElement | null>(null)
+  const audioCache = useRef<Map<string, string>>(new Map())
+
+
+  useEffect(() => {
+    if (!currentItem || !playing) return
+
+    async function play() {
+      const res = await fetch("/api/audio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: currentItem?.body, speaker: 42 }),
+      })
+
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+
+      const audio = new Audio(url)
+      audioRef.current = audio
+
+      await audio.play()
+    }
+
+    play()
+  }, [currentItem, playing])
+
+
+
   if (!currentItem) return null
 
   return (
@@ -71,7 +101,18 @@ export default function NewsPlayerMini({ isOpen }: Props) {
         {/* 再生コントロール */}
         <PlaybackControls
           isPlaying={isPlaying}
-          onToggle={() => setIsPlaying(!isPlaying)}
+          onToggle={() => {
+            if (!audioRef.current) return
+
+            if (isPlaying) {
+              audioRef.current.pause()
+            } else {
+              audioRef.current.play()
+            }
+
+            setIsPlaying(!isPlaying)
+          }}
+
           onRewind={() => setCurrentTime(prev => Math.max(prev - 10, 0))}
           onForward={() => setCurrentTime(prev => prev + 10)}
         />
