@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation';
 
-import sample from '@/public/sample.jpg';
+import sample from '@/public/no-image.png';
 import SafeImage from '@/components/SafeImage';
 import { playAudio } from '@/app/lib/audio';
 import { auth, db } from '@/app/lib/firebase/firebase';

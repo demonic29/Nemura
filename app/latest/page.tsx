@@ -28,7 +28,6 @@ export default function LatestPage() {
 
   // 音声再生
   const [character, setCharacter] = useState<string>('');
-  console.log(character)
 
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 

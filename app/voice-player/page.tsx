@@ -256,7 +256,8 @@ export default function Page() {
                 className="animate-pulse"
                 priority
               />
-              <p className="text-white mt-8">音声を生成中...</p>
+              <p className="text-white text-lg mt-8">音声を生成中...</p>
+              <p className="text-gray-300 text-[14px] mt-2">寝る前の準備をしといてね ~~ 😴</p>
             </div>
           ) : (
             <NewsPlayer

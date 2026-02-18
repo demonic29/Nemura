@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react'
 import SafeImage from './SafeImage'
 import { auth, db } from '@/app/lib/firebase/firebase'
 import { doc, onSnapshot, updateDoc, arrayRemove } from 'firebase/firestore'
+import noImage from '@/public/no-image.png'
 
 import {
     Modal,
@@ -69,7 +70,7 @@ export default function LatestNewsCard({ i, playAudio, index, id }: any) {
             const newsItem = {
                 id: Date.now().toString(),
                 title: i.title,
-                imageUrl: i["hatena:imageurl"],
+                imageUrl: i["hatena:imageurl"] || noImage.src,
                 category: Array.isArray(i["dc:subject"]) ? i["dc:subject"][1] : i["dc:subject"],
                 link: i.link,
                 addedAt: new Date().toISOString(),
@@ -163,9 +164,9 @@ export default function LatestNewsCard({ i, playAudio, index, id }: any) {
                             />}
                     </button>
 
-                    <button onClick={() => playAudio(i.title, "20")}>
+                    {/* <button onClick={() => playAudio(i.title, user)}>
                         <PlayCircleIcon className="w-6 h-6 text-gray-400 cursor-pointer" />
-                    </button>
+                    </button> */}
                 </div>
             </div>
 

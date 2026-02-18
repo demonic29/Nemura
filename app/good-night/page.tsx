@@ -178,7 +178,7 @@ export default function GoodNightPage() {
         {/* 🎵 BGM */}
         <audio
           ref={audioRef}
-          src="/nemura-sleep.mp3"
+          src="/nemura-sleep-time.mp3"
           preload="auto"
         />
       </main>

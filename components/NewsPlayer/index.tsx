@@ -46,6 +46,7 @@ export default function NewsPlayer({
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const [currentTime, setCurrentTime] = useState(0)
+  const [actualDuration, setActualDuration] = useState(0)
   const [playbackSpeed, setPlaybackSpeed] = useState('1X')
 
   // ✅ PLAY / PAUSE (SINGLE SOURCE OF TRUTH)
@@ -85,6 +86,11 @@ export default function NewsPlayer({
     }
   }, [])
 
+  useEffect(() => {
+    setActualDuration(0)
+    setCurrentTime(0)
+  }, [audioUrl])
+
   // Sleep timer
   const [sleepMinutes, setSleepMinutes] = useState<number | 'track-end'>('track-end')
   useEffect(() => {
@@ -118,6 +124,11 @@ export default function NewsPlayer({
         src={audioUrl || ''}
         preload="auto"
         crossOrigin="anonymous"
+        onLoadedMetadata={() => {
+          if (audioRef.current) {
+            setActualDuration(audioRef.current.duration || 0)
+          }
+        }}
         onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
         onEnded={() => {
           if (sleepMinutes === 'track-end') {
@@ -143,7 +154,7 @@ export default function NewsPlayer({
         </div>
         <div className="px-8">
           <AudioSeekBar
-            duration={item.estimatedDuration || 0}
+            duration={actualDuration}
             current={currentTime}
             onSeek={(time) => {
               if (audioRef.current) audioRef.current.currentTime = time
