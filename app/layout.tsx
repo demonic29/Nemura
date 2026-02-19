@@ -4,7 +4,7 @@ import '../app/globals.css'
 import type { Metadata } from 'next'
 import { Zen_Maru_Gothic } from 'next/font/google'
 import { Providers } from './provider'
-import { VoicePlayerProvider } from '@/context/VoicePlayerContext'
+import { VoicePlayerProvider } from '@/app/context/VoicePlayerContext'
 
 // const zenMaru = Zen_Maru_Gothic({
 //   subsets: ['latin'],

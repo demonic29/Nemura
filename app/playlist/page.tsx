@@ -5,12 +5,19 @@
 import NavigationHeader from "@/components/NavigationHeader"
 import NewsCard from "@/components/NewsCard"
 import NewsPlayerMini from "@/components/NewsPlayer/NewsPlayerMini"
-import { useVoicePlayer, VoiceItem } from '@/context/VoicePlayerContext'
+import { useVoicePlayer, VoiceItem } from '@/app/context/VoicePlayerContext'
 import BottomNavigationBar from "@/components/BottomNavigationBar"
 import { auth, db } from '@/app/lib/firebase/firebase'
 import { doc, onSnapshot, updateDoc, arrayRemove } from 'firebase/firestore'
 
 import { useState, useRef, useEffect } from "react"
+import PlaylistCard from "@/components/PlaylistCard"
+import { ArrowRightIcon, PlayCircleIcon } from "@/assets/icons"
+import SafeImage from "@/components/SafeImage"
+
+import sample from '@/public/fallback-img.png';
+import { useRouter } from "next/navigation"
+
 
 interface PlaylistItem {
     id: string
@@ -24,7 +31,17 @@ interface PlaylistItem {
 export default function PlaylistPage() {
     const [items, setItems] = useState<PlaylistItem[]>([])
     const [user, setUser] = useState<any>(null)
-    const { playing, currentItem, setCurrentItem, setPlaying } = useVoicePlayer()
+
+    const router = useRouter();
+
+    const {
+        playing,
+        currentItem,
+        setCurrentItem,
+        setPlaying,
+        playQueue
+    } = useVoicePlayer()
+
     const miniPlayerRef = useRef<HTMLDivElement>(null)
 
     // Get current user
@@ -55,13 +72,13 @@ export default function PlaylistPage() {
         try {
             const userDocRef = doc(db, "users", user.uid)
             const itemToRemove = items.find(item => item.id === itemId)
-            
+
             if (itemToRemove) {
                 await updateDoc(userDocRef, {
                     playlist: arrayRemove(itemToRemove)
                 })
             }
-            
+
             setItems(prev => prev.filter(item => item.id !== itemId))
             if (currentItem?.title === itemToRemove?.title) {
                 setPlaying(false)
@@ -107,14 +124,58 @@ export default function PlaylistPage() {
     return (
         <div className="bg-background-light h-screen w-full relative flex flex-col overflow-hidden">
             <div className="relative w-full flex flex-col overflow-hidden">
-                <div className="h-[54px] shrink-0" />
                 <BottomNavigationBar />
-                    <NavigationHeader title="プレイリスト" />
+
+                <div className="w-full h-[300px] relative overflow-hidden">
+
+                    <SafeImage
+                        alt="Playlist Hero"
+                        fill
+                        src={sample}
+                        className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+                    {/* Back button */}
+                    <button
+                        onClick={() => router.back()}
+                        className="text-blue-400 bg-gray-300 left-4  rotate-180 rounded-full p-1 absolute top-8 text-sm font-semibold"
+                    >
+                        <ArrowRightIcon />
+                    </button>
+
+                    {/* Title */}
+                    <div>
+                        <h1 className="text-[24px] text-center font-bold left-0 right-0 absolute normal text-white bottom-4 ms-4">
+                            ようこそ、Nemura プレイリストへ
+
+                            {items.length > 0 && (
+                                <button
+                                    onClick={() => {
+                                        const voiceItems = items.map(item => ({
+                                            title: item.title,
+                                            body: item.category,
+                                            imageUrl: item.imageUrl,
+                                        }))
+
+                                        playQueue(voiceItems)
+                                    }}
+                                    className="flex w-[50%] mx-auto text-gray-200 mt-4 items-center justify-center py-2 rounded-full gap-2 bg-[#3A86FF]/20"
+                                >
+                                    <PlayCircleIcon className=" text-gray-400" />
+                                    全て再生
+                                </button>
+                            )}
+                        </h1>
+                    </div>
+                </div>
+
+
 
                 <div className="flex-1 flex flex-col px-6 mt-6 z-20 overflow-y-auto pb-32">
                     <div className="space-y-4">
                         {items.map((item) => (
-                            <NewsCard
+                            <PlaylistCard
                                 key={item.id}
                                 item={{
                                     title: item.title,

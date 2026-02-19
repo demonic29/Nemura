@@ -6,14 +6,21 @@ import { useState, useEffect } from "react"
 import NewsHeader from "./NewsHeader"
 import AudioSeekBar from "./AudioSeekBar"
 import PlaybackControls from "./PlaybackControls"
-import { useVoicePlayer } from "@/context/VoicePlayerContext"
+import { useVoicePlayer } from "@/app/context/VoicePlayerContext"
 
 type Props = {
   isOpen: boolean
 }
 
 export default function NewsPlayerMini({ isOpen }: Props) {
-  const { playing, currentItem } = useVoicePlayer()
+  const {
+    playing,
+    setPlaying,
+    currentItem,
+    playNext,
+    playPrev
+  } = useVoicePlayer()
+
   const router = useRouter()
   const [currentTime, setCurrentTime] = useState(0)
   const [playbackSpeed, setPlaybackSpeed] = useState('1X')
@@ -74,6 +81,8 @@ export default function NewsPlayerMini({ isOpen }: Props) {
           onToggle={() => setIsPlaying(!isPlaying)}
           onRewind={() => setCurrentTime(prev => Math.max(prev - 10, 0))}
           onForward={() => setCurrentTime(prev => prev + 10)}
+          onNext={playNext}
+          onPrev={playPrev}
         />
 
       </div>
