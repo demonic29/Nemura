@@ -4,7 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Background from "@/components/Background";
-import LottiePlayer from "@/components/LottiePlayer";
+
+// クライアント専用で LottiePlayer を読み込む
+import dynamic from "next/dynamic";
+const LottiePlayer = dynamic(() => import("@/components/LottiePlayer"), { ssr: false });
 
 import {
   ArrowRightIcon,

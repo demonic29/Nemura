@@ -5,12 +5,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import Background from "@/components/Background";
 import DialogueBox from "@/components/DialogueBox";
-import LottiePlayer from "@/components/LottiePlayer";
 import Fade from "@/components/Fade";
 
 import sleepJson from "@/assets/animations/sleep-nemura.json";
 import smileJson from "@/assets/animations/smile-nemura.json";
 import { ArrowRightIcon, FingerPointIcon } from "../../assets/icons/index";
+
+
+// クライアント専用で LottiePlayer を読み込む
+import dynamic from "next/dynamic";
+const LottiePlayer = dynamic(() => import("@/components/LottiePlayer"), { ssr: false });
 
 function WelcomeContent() {
   const router = useRouter();
@@ -101,10 +105,10 @@ function WelcomeContent() {
 
           {index === 1 ? (
             <Fade>
-              <LottiePlayer data={currentAnimation} width={280} height={280} />
+              <LottiePlayer data={currentAnimation} width={300} height={305} />
             </Fade>
           ) : (
-            <LottiePlayer data={currentAnimation} width={280} height={280} />
+            <LottiePlayer data={currentAnimation} width={300} height={305} />
           )}
         </div>
 

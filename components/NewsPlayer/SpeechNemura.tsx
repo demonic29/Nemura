@@ -3,10 +3,14 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import LottiePlayer from "@/components/LottiePlayer"
 import SpeechVoiceRing from '@/assets/graphics/speech-ring.svg'
 import sleepJson from "@/assets/animations/sleep-nemura.json"
-import smileJson from "@/assets/animations/smile-nemura.json"
+import smileJson from "@/assets/animations/reading-nemura.json"
+
+
+// クライアント専用で LottiePlayer を読み込む
+import dynamic from "next/dynamic";
+const LottiePlayer = dynamic(() => import("@/components/LottiePlayer"), { ssr: false });
 
 type Props = { isPlaying: boolean }
 
@@ -39,7 +43,7 @@ export default function SpeechNemura({ isPlaying }: Props) {
           <LottiePlayer
             data={currentAnimation}
             loop={true}
-            width={150}
+            width={161}
             height={150}
           />
         </div>

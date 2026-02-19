@@ -23,7 +23,16 @@ export default function GoodNightPage() {
   const [curtainDown, setCurtainDown] = useState(false)
 
   // 🕒 Real-time clock
-  const [now, setNow] = useState(new Date())
+
+  // 	初期値を null にして SSR と差をなくす
+  // クライアントで useEffect 内でセットすることで Hydration エラー回避
+  const [now, setNow] = useState<Date | null>(null)
+
+  useEffect(() => {
+    setNow(new Date())
+    const interval = setInterval(() => setNow(new Date()), 1000)
+    return () => clearInterval(interval)
+  }, [])
 
   // Fade-in mount
   useEffect(() => {
@@ -39,10 +48,14 @@ export default function GoodNightPage() {
     return () => clearInterval(interval)
   }, [])
 
-  const formattedTime = now.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  })
+  // const formattedTime = now.toLocaleTimeString([], {
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  // })
+  // 	クライアントで useEffect によって now がセットされると自動で更新される
+  const formattedTime = now
+  ? now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  : "--:--"
 
   // 🎵 Audio Control + Fade Logic
   useEffect(() => {

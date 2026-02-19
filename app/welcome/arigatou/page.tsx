@@ -5,12 +5,16 @@ import { useRouter } from "next/navigation";
 
 import Background from "@/components/Background";
 import DialogueBox from "@/components/DialogueBox";
-import LottiePlayer from "@/components/LottiePlayer";
 import Fade from "@/components/Fade";
 
 import { ArrowRightIcon } from "@/assets/icons";
 
 import smileJson from "@/assets/animations/smile-nemura.json";
+
+
+// クライアント専用で LottiePlayer を読み込む
+import dynamic from "next/dynamic";
+const LottiePlayer = dynamic(() => import("@/components/LottiePlayer"), { ssr: false });
 
 function ArigatouContent() {
   const router = useRouter();

@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 import Background from "@/components/Background";
 import NavigationHeader from "@/components/NavigationHeader";
 
-import LottiePlayer from "@/components/LottiePlayer";
-
 import { playAudio } from "@/app/lib/audio";
 
 import {
@@ -18,6 +16,11 @@ import {
 import smileJson from "@/assets/animations/smile-nemura.json";
 import { auth, db } from "@/app/lib/firebase/firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+
+
+// クライアント専用で LottiePlayer を読み込む
+import dynamic from "next/dynamic";
+const LottiePlayer = dynamic(() => import("@/components/LottiePlayer"), { ssr: false });
 
 const VOICES = [
   { id: "electronic", label: "電子的な声", speaker: "54", word: "電子的な声です" },

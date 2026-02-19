@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { signInAnonymously } from "firebase/auth";
 
 import Background from "@/components/Background";
-import LottiePlayer from "@/components/LottiePlayer";
 
 import {
   ArrowRightIcon,
@@ -14,6 +13,10 @@ import {
 } from "@/assets/icons";
 
 import smileJson from "@/assets/animations/smile-nemura.json";
+
+// クライアント専用で LottiePlayer を読み込む
+import dynamic from "next/dynamic";
+const LottiePlayer = dynamic(() => import("@/components/LottiePlayer"), { ssr: false });
 
 // firebase
 import { auth, db } from "@/app/lib/firebase/firebase";

@@ -1,7 +1,11 @@
 import React from 'react'
-import LottiePlayer from './LottiePlayer'
 import Fade from './Fade'
 import smileNemura from '@/assets/animations/smile-nemura.json'
+
+
+// クライアント専用で LottiePlayer を読み込む
+import dynamic from "next/dynamic";
+const LottiePlayer = dynamic(() => import("@/components/LottiePlayer"), { ssr: false });
 
 export default function NemuraLoading() {
     return (
