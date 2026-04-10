@@ -9,6 +9,10 @@ body {
   font-family: "Noto Sans JP", sans-serif;
 }
 
+.zen-kaku {
+  font-family: "Zen Kaku Gothic New", sans-serif;
+}
+
 .fade-enter {
   @apply opacity-0;
 }
@@ -56,6 +60,10 @@ body {
 
 .caption {
   @apply text-[13px] font-[500] leading-[22px];
+}
+
+.tag {
+  @apply text-[12px] font-[400] leading-[20px] text-[#e1e1e1];
 }
 
 @layer utilities {

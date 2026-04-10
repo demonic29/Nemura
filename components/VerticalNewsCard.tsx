@@ -40,7 +40,7 @@ export default function VerticalNewsCard({
   return (
     <Link href={`/topic/${encodeURIComponent(item.title)}`}>
       <div className="relative flex h-[14.5rem] w-[13.75rem] flex-col overflow-hidden rounded-2xl bg-[#3A86FF]/10 shadow-lg transition-colors hover:bg-[#3A86FF]/20 sm:h-[15.5rem] sm:w-[15rem]">
-        
+
         <div className="relative h-[13rem] w-full sm:h-[10rem]">
           {imageUrl && (
             <SafeImage
@@ -57,7 +57,10 @@ export default function VerticalNewsCard({
           <h3 className="normal line-clamp-3">
             {item.title}
           </h3>
-          <span className="desc mt-auto">{subject}</span>
+          <span className="tag mt-auto">
+            <i className="fa-solid me-1 fa-tag"></i>
+            {subject}
+          </span>
 
           {/* <div className="absolute bottom-2 right-3 flex items-center space-x-3 text-gray-400">
             <button onClick={handleToggleAdd} className="hover:opacity-70 transition-opacity">
@@ -67,7 +70,7 @@ export default function VerticalNewsCard({
               <PlayCircleIcon className="w-7 h-7" />
             </button>
           </div> */}
-          
+
         </div>
 
       </div>

@@ -27,12 +27,6 @@ export default function TopicSelectionPage() {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const toggleTopic = (id: string) => {
-    setSelectedTopics((prev) =>
-      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
-    );
-  };
-
   useEffect(() => {
     setLoading(true);
     fetch("/api/hatena?type=popular")
@@ -75,9 +69,21 @@ export default function TopicSelectionPage() {
     }
   };
 
+
+   // toggle selected topics
+  const toggleTopic = (id: string) => {
+    setSelectedTopics((prev) =>
+      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
+    );
+  };
+
+  // Normalize function to remove duplicates
   const normalize = (s: string) => s.replace(/\s+/g, "").toLowerCase();
 
+  // remove duplicates topics 
   const uniqueTopics = Array.from(
+
+    // if there is same topic, take the first one
     new Map(
       chooseTopics
         .flatMap((t) => {
@@ -174,9 +180,9 @@ export default function TopicSelectionPage() {
           </button>
         </div>
 
-        <div className="absolute bottom-[-100px] w-full flex justify-center pointer-events-none z-0">
+        {/* <div className="absolute bottom-[-100px] w-full flex justify-center pointer-events-none z-0">
           <LottiePlayer data={smileJson} width={360} height={360} />
-        </div>
+        </div> */}
       </div>
     </Background>
   );

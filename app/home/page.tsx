@@ -1,23 +1,27 @@
 "use client";
-import "../globals.css";
-import {
-  ChevronRightIcon,
-} from "@icons/index";
-import { useEffect, useState } from "react";
+
+// others
 import Link from "next/link";
 import SafeImage from "@/components/SafeImage";
-import NavigationHeader from "@/components/NavigationHeader";
+import { ChevronRightIcon } from "@icons/index";
+import { useEffect, useState } from "react";
+import "../globals.css";
+
+// components
 import VoiceNewsCard from "@/components/NewsCard";
 import VerticalNewsCard from "@/components/VerticalNewsCard";
 import BottomNavigationBar from "@/components/BottomNavigationBar";
-import { Characters } from "@/app/ai-character/config"; // キャラクター情報をインポート
-import { playAudio } from "@/app/lib/audio";
+import NavigationHeader from "@/components/NavigationHeader";
+
+// data fetching
 import { HatenaNewsItem, getHatenaNewsSubject } from "@/app/lib/news";
+import HomeSectionHeader from "./_components/HomeSectionHeader";
 
 export default function HomePage() {
   const [popularNews, setPopularNews] = useState<HatenaNewsItem[]>([]);
   const [newTopics, setNewTopics] = useState<HatenaNewsItem[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const newsTypes = ["popular", "new"];
 
   useEffect(() => {
     fetch("/api/hatena?type=popular")
@@ -40,47 +44,20 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="relative flex min-h-[100dvh] w-full flex-col overflow-y-auto bg-background-light no-scrollbar">
+    <main>
 
       {/* bottom nav-bar */}
       <BottomNavigationBar />
 
       <div className="mx-auto flex w-full max-w-[30rem] flex-1 flex-col pb-28 pt-2">
 
-        {/* home nav-bar */}
-        <div>
-          <div className="shrink-0">
-            <NavigationHeader title="今日の Nemura" showBack={false} className="px-0" />
-          </div>
-
-          <div className="mt-4 flex justify-center">
-            <div className="relative aspect-[3/1] w-full max-w-[25rem]">
-              <SafeImage
-                src="/graphic-nemura.png"
-                alt="Nemura graphic"
-                fill
-                sizes="(max-width: 640px) 92vw, 25rem"
-                className="object-contain"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* content */}
+        {/* -- content -- */}
         <div className="mt-6">
 
           {/* pickup-section */}
           <section className="mb-8">
-            <div className="mb-5 flex items-end justify-between gap-3">
-              <div>
-                <h2 className="title mb-1 text-white-soft">おすすめ</h2>
-                <p className="desc">選択されたトピック</p>
-              </div>
-              <Link href="/topic" className="flex items-center gap-1 self-center text-[#3A86FF]">
-                <p>すべて見る</p>
-                <ChevronRightIcon className="scale-[0.8] cursor-pointer text-[#3A86FF]" />
-              </Link>
-            </div>
+
+            <HomeSectionHeader title="お勧め記事" description="流行っている記事を読もう！" link="/topic" />
 
             <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 no-scrollbar sm:-mx-6 sm:px-6">
               {newTopics.slice(0, 5).map((news, idx) => (
@@ -93,7 +70,6 @@ export default function HomePage() {
                       body: news.body,
                       link: news.link
                     }}
-                    onPlayClick={() => playAudio(news.title, Characters[18].value)}
                   />
                 </div>
               ))}
@@ -102,14 +78,9 @@ export default function HomePage() {
 
           {/* latest-news-section */}
           <section className="flex flex-col">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <h2 className="title">最新ニュース</h2>
-              <Link href="/latest" className="flex items-center gap-1 text-[#3A86FF]">
-                <p>すべて見る</p>
-                <ChevronRightIcon className="scale-[0.8] cursor-pointer text-[#3A86FF]" />
-              </Link>
-            </div>
 
+            <HomeSectionHeader title="最新記事" description="Nemura の最新記事をご覧ください！" link="/latest" />
+            
             <div className="space-y-3 sm:space-y-4">
               {popularNews.slice(0, 10).map((news) => (
                 <VoiceNewsCard
@@ -121,7 +92,6 @@ export default function HomePage() {
                     body: news.body,
                     link: news.link
                   }}
-                  onPlayClick={() => playAudio(news.title, Characters[18].value)}
                 />
               ))}
             </div>
